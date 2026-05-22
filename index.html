@@ -274,6 +274,23 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
 
 
 
+
+/* 대외활동 추가 버튼 */
+.act-add-btn{display:none;margin-bottom:16px;background:rgba(30,150,232,.1);border:1px solid rgba(30,150,232,.3);border-radius:20px;padding:8px 20px;font-size:12px;font-weight:600;color:var(--b500);font-family:'Pretendard',sans-serif;}
+body.edit-mode .act-add-btn{display:inline-block;}
+.act-row.user-added .act-del{display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(224,80,80,.1);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:3px 8px;font-size:10px;color:#e05050;font-family:'Pretendard',sans-serif;}
+body.edit-mode .act-row.user-added{position:relative;padding-right:60px;}
+body.edit-mode .act-row.user-added .act-del{display:block;}
+
+/* 유튜브 링크 버튼 */
+.yt-link{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:5px 12px;background:rgba(255,0,0,.07);border:1px solid rgba(255,0,0,.18);border-radius:14px;font-size:11px;font-weight:600;color:#c00;text-decoration:none;transition:background .2s;}
+.yt-link:hover{background:rgba(255,0,0,.14);}
+.yt-link::before{content:'▶';font-size:9px;}
+
+/* 대외활동 모달 */
+.act-modal-bg{position:fixed;inset:0;background:rgba(13,31,48,.45);backdrop-filter:blur(8px);z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.act-modal-bg.open{opacity:1;pointer-events:auto;}
+.act-modal{background:var(--glass);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:24px;width:min(480px,92vw);padding:32px;box-shadow:0 24px 80px rgba(13,31,48,.2);position:relative;}
 </style>
 </head>
 <body>
@@ -460,6 +477,41 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
   </div>
 </div>
 
+
+<!-- 대외활동 추가 모달 -->
+<div class="act-modal-bg" id="actModalBg" onclick="if(event.target===this)closeActModal()">
+  <div class="act-modal">
+    <button class="modal-close" onclick="closeActModal()">✕</button>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px">대외활동 추가</div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">연도</div>
+      <input class="m-genre-inp" id="aYear" placeholder="예: 2026, 2025–26" style="width:100%">
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">활동명</div>
+      <input class="m-genre-inp" id="aName" placeholder="예: 북악스터디 46기" style="width:100%">
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">활동 내용</div>
+      <textarea class="m-log" id="aOrg" placeholder="간단한 활동 내용을 입력하세요." style="min-height:60px"></textarea>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">탭 선택</div>
+      <select id="aTab" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,.6);color:var(--ink);font-family:'Pretendard',sans-serif;font-size:13px;">
+        <option value="awards">수상 및 선정</option>
+        <option value="edu">교육 수료</option>
+        <option value="cert">자격증</option>
+        <option value="activities" selected>대외활동</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px">
+      <button class="m-save" onclick="saveActItem()">추가</button>
+      <button class="m-save" style="background:var(--ink3)" onclick="closeActModal()">취소</button>
+      <span class="m-saved" id="actSaved">추가되었습니다 ✓</span>
+    </div>
+  </div>
+</div>
+
 <!-- 필름 모달 -->
 <div class="modal-bg" id="modalBg" onclick="bgClose(event)">
   <div class="modal">
@@ -468,14 +520,25 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
     <div class="modal-role" id="mRole"></div>
     <div class="modal-still" id="mStill">
       <div class="ph edit-only" id="mPh" onclick="document.getElementById('mFile').click()">
-        <div class="plus">＋</div><span>스틸컷 추가 (클릭)</span><span style="font-size:11px;color:var(--ink4)">JPG / PNG / WEBP</span>
+        <div class="plus">＋</div><span>클릭해서 파일 선택</span><span style="font-size:11px;color:var(--ink4)">JPG / PNG / WEBP</span>
       </div>
       <img id="mImg" style="display:none" alt="스틸컷" onclick="if(editMode)document.getElementById('mFile').click()">
       <input type="file" id="mFile" accept="image/*" style="display:none" onchange="handleImg(event)">
     </div>
+    <div class="edit-only" style="margin-bottom:14px">
+      <div class="m-lbl">또는 이미지 URL 붙여넣기</div>
+      <div style="display:flex;gap:8px">
+        <input class="m-genre-inp" id="mImgUrl" placeholder="https://drive.google.com/file/d/.../view 또는 직접 이미지 URL" style="flex:1;margin-bottom:0">
+        <button class="m-save" style="margin-top:0;padding:8px 16px;font-size:12px;flex-shrink:0" onclick="applyImgUrl()">적용</button>
+      </div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:5px">구글 드라이브 링크는 자동으로 변환돼요</div>
+    </div>
+    <div id="mYtView" class="view-only" style="margin-bottom:8px"></div>
     <div id="mGenreView" class="view-only" style="margin-bottom:12px"></div>
     <div id="mLogView" class="view-only" style="font-size:14px;line-height:1.85;color:var(--ink2);margin-bottom:4px"></div>
     <div class="edit-only" style="margin-bottom:6px">
+      <div class="m-lbl">유튜브 링크 (선택)</div>
+      <input class="m-genre-inp" id="mYtUrl" placeholder="https://youtu.be/..." style="margin-bottom:14px">
       <div class="m-lbl">장르</div>
       <input class="m-genre-inp" id="mGenre" placeholder="예: 드라마, 스릴러, 코미디...">
       <div class="m-lbl">로그라인</div>
@@ -483,7 +546,7 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
     </div>
     <div class="edit-only">
       <button class="m-save" onclick="saveModal()">저장</button>
-      <button class="m-export" onclick="exportHTML()">HTML 내보내기</button>
+      
       <span class="m-saved" id="mSaved">저장되었습니다 </span>
     </div>
   </div>
@@ -554,6 +617,7 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
     <div class="det-body">
       <div class="act-tabs fi">
         <button class="act-tab on" onclick="actTab('awards',this)"> 수상 및 선정</button>
+        <button class="act-add-btn" id="actAddBtn" onclick="openActModal()">+ 항목 추가</button>
         <button class="act-tab" onclick="actTab('edu',this)"> 교육 수료</button>
         <button class="act-tab" onclick="actTab('cert',this)"> 자격증</button>
         <button class="act-tab" onclick="actTab('activities',this)"> 대외활동</button>
@@ -737,9 +801,24 @@ function actTab(id,btn){
   btn.classList.add('on');document.getElementById('act-'+id).classList.add('on');
 }
 
-var SKEY='portfolio_film_data';
-function loadData(){try{return JSON.parse(localStorage.getItem(SKEY)||'{}')}catch(e){return{}}}
-function saveData(d){localStorage.setItem(SKEY,JSON.stringify(d))}
+var SKEY = 'portfolio_film_data';
+var ACT_KEY = 'portfolio_act_data';
+var _actCache = [];
+var _filmCache = {};
+var db = null;
+
+function loadData() {
+  if (Object.keys(_filmCache).length > 0) return _filmCache;
+  try { return JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch(e) { return {}; }
+}
+function saveData(d) {
+  _filmCache = d;
+  try { localStorage.setItem(SKEY, JSON.stringify(d)); } catch(e) {}
+  if (window._fbDB && window._fbRef && window._fbSet) {
+    window._fbSet(window._fbRef(window._fbDB, 'portfolio_films'), d)
+      .catch(function(e){ console.warn('Firebase 저장 실패:', e); });
+  }
+}
 
 var curId='';
 function openModal(title,role,type,id){
@@ -751,8 +830,12 @@ function openModal(title,role,type,id){
   document.getElementById('mRole').textContent=role.toUpperCase();
   if(editMode){
     document.getElementById('mGenre').value=data.genre||'';
+  document.getElementById('mYtUrl').value=data.ytUrl||'';
+  if(document.getElementById('mImgUrl'))document.getElementById('mImgUrl').value='';
     document.getElementById('mLog').value=data.logoline||'';
   }
+  var yv=document.getElementById('mYtView');
+  if(data.ytUrl){yv.innerHTML='<a class="yt-link" href="'+data.ytUrl+'" target="_blank">영상 보기</a>';}else{yv.innerHTML='';}
   var gv=document.getElementById('mGenreView'),lv=document.getElementById('mLogView');
   if(data.genre){gv.innerHTML='<span style="display:inline-block;background:rgba(30,150,232,.1);border:1px solid rgba(30,150,232,.25);border-radius:14px;padding:4px 12px;font-size:11.5px;font-weight:600;color:var(--b500);margin-bottom:12px">'+data.genre+'</span>'}else{gv.innerHTML=''}
   lv.textContent=data.logoline||'';
@@ -767,6 +850,124 @@ function openModal(title,role,type,id){
 function bgClose(e){if(e.target===document.getElementById('modalBg'))closeModal()}
 function closeModal(){document.getElementById('modalBg').classList.remove('open')}
 
+// ── 대외활동 추가 기능 ──
+var ACT_KEY='portfolio_act_data';
+var _actCache=[];
+function loadActData(){
+  if(_actCache.length>0)return _actCache;
+  try{return JSON.parse(localStorage.getItem(ACT_KEY)||'[]');}catch(e){return[];}
+}
+function saveActData(arr){
+  _actCache=arr;
+  try{localStorage.setItem(ACT_KEY,JSON.stringify(arr));}catch(e){}
+  if(window._fbDB&&window._fbRef&&window._fbSet){
+    window._fbSet(window._fbRef(window._fbDB,'portfolio_acts'),arr)
+      .catch(function(e){console.warn('Firebase 대외활동 저장 실패:',e);});
+  }
+}
+function openActModal(){
+  document.getElementById('aYear').value='';
+  document.getElementById('aName').value='';
+  document.getElementById('aOrg').value='';
+  document.getElementById('actModalBg').classList.add('open');
+}
+function closeActModal(){document.getElementById('actModalBg').classList.remove('open');}
+function saveActItem(){
+  var yr=document.getElementById('aYear').value.trim();
+  var nm=document.getElementById('aName').value.trim();
+  var org=document.getElementById('aOrg').value.trim();
+  var tab=document.getElementById('aTab').value;
+  if(!yr||!nm){alert('연도와 활동명은 필수입니다.');return;}
+  var arr=loadActData();
+  arr.push({id:'act_'+Date.now(),yr:yr,name:nm,org:org,tab:tab,added:true});
+  saveActData(arr);
+  renderUserActs();
+  var msg=document.getElementById('actSaved');
+  msg.style.opacity='1';
+  setTimeout(function(){msg.style.opacity='0';},2000);
+  closeActModal();
+}
+function renderUserActs(){
+  document.querySelectorAll('.act-row.user-added').forEach(function(el){el.remove();});
+  var arr=loadActData();
+  if(!arr.length)return;
+  arr.sort(function(a,b){return (parseInt(b.yr)||0)-(parseInt(a.yr)||0);});
+  arr.forEach(function(item){
+    var container=document.querySelector('#act-'+item.tab+' .fi');
+    if(!container)return;
+    var row=document.createElement('div');
+    row.className='act-row user-added';
+    row.dataset.id=item.id;
+    // 연도
+    var yrDiv=document.createElement('div');
+    yrDiv.className='act-yr';
+    yrDiv.textContent=item.yr;
+    row.appendChild(yrDiv);
+    // 내용
+    var infoDiv=document.createElement('div');
+    var nameDiv=document.createElement('div');
+    nameDiv.className='act-name';
+    nameDiv.textContent=item.name;
+    infoDiv.appendChild(nameDiv);
+    if(item.org){
+      var orgDiv=document.createElement('div');
+      orgDiv.className='act-org';
+      orgDiv.textContent=item.org;
+      infoDiv.appendChild(orgDiv);
+    }
+    row.appendChild(infoDiv);
+    // 삭제 버튼 (편집 모드에서만 보임)
+    var delBtn=document.createElement('button');
+    delBtn.className='act-del';
+    delBtn.textContent='삭제';
+    delBtn.dataset.id=item.id;
+    delBtn.onclick=function(){deleteActItem(this.dataset.id);};
+    row.appendChild(delBtn);
+    // 연도 순서에 맞게 삽입
+    var rows=container.querySelectorAll('.act-row:not(.user-added)');
+    var inserted=false;
+    for(var i=0;i<rows.length;i++){
+      var rowYr=parseInt((rows[i].querySelector('.act-yr')||{}).textContent||'0')||0;
+      if((parseInt(item.yr)||0)>rowYr){container.insertBefore(row,rows[i]);inserted=true;break;}
+    }
+    if(!inserted)container.appendChild(row);
+  });
+}
+
+function deleteActItem(id){
+  var arr=loadActData().filter(function(a){return a.id!==id;});
+  saveActData(arr);
+  renderUserActs();
+}
+setTimeout(function(){renderUserActs();},600);
+
+
+
+function convertImgUrl(url){
+  if(!url)return '';
+  // 구글 드라이브 /file/d/ID/view 형태
+  var m1=url.match(/drive\.google\.com\/file\/d\/([^\/\?]+)/);
+  if(m1)return 'https://drive.google.com/uc?export=view&id='+m1[1];
+  // 구글 드라이브 open?id=ID 형태
+  var m2=url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+  if(m2)return 'https://drive.google.com/uc?export=view&id='+m2[1];
+  // 이미 uc?export 형태면 그대로
+  return url;
+}
+
+function applyImgUrl(){
+  var raw=document.getElementById('mImgUrl').value.trim();
+  if(!raw)return;
+  var converted=convertImgUrl(raw);
+  var img=document.getElementById('mImg');
+  var ph=document.getElementById('mPh');
+  img.src=converted;
+  img.style.display='block';
+  ph.style.display='none';
+  document.getElementById('mStill').style.display='block';
+  // 파일 인풋 초기화 (URL 방식 우선)
+  document.getElementById('mFile').value='';
+}
 function handleImg(e){
   var file=e.target.files[0];if(!file)return;
   var reader=new FileReader();
@@ -776,30 +977,86 @@ function handleImg(e){
 
 function saveModal(){
   var data=loadData();
-  var img=document.getElementById('mImg');
-  data[curId]={genre:document.getElementById('mGenre').value,logoline:document.getElementById('mLog').value,img:(img.style.display!=='none'&&img.src&&img.src!==location.href)?img.src:''};
-  saveData(data);
-  var msg=document.getElementById('mSaved');msg.textContent='저장되었습니다 ';msg.classList.add('show');
-  setTimeout(function(){msg.classList.remove('show')},2500);
+  var genre=document.getElementById('mGenre').value;
+  var logoline=document.getElementById('mLog').value;
+  var ytUrl=document.getElementById('mYtUrl')?document.getElementById('mYtUrl').value:'';
+  var imgEl=document.getElementById('mImg');
+  var msg=document.getElementById('mSaved');
+
+  function doSave(imgSrc){
+    data[curId]={genre:genre,logoline:logoline,img:imgSrc||'',ytUrl:ytUrl};
+    saveData(data);
+    msg.textContent='저장되었습니다 ✓';msg.classList.add('show');
+    setTimeout(function(){msg.classList.remove('show');},2500);
+  }
+
+  var fileInput=document.getElementById('mFile');
+  if(fileInput.files&&fileInput.files[0]){
+    msg.textContent='처리 중...';msg.classList.add('show');
+    var reader=new FileReader();
+    reader.onload=function(ev){doSave(ev.target.result);};
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    // URL 방식 or 기존 이미지
+    var src=(imgEl.style.display!=='none'&&imgEl.src&&imgEl.src!==location.href)?imgEl.src:'';
+    doSave(src);
+  }
 }
 
-function exportHTML(){
-  var data=loadData();
-  var dj=JSON.stringify(data).replace(/</g,'\u003c').replace(/>/g,'\u003e');
-  var src=document.documentElement.outerHTML;
-  var S='/*__FS__*/';var E='/*__FE__*/';
-  var si=src.indexOf(S);var ei=src.indexOf(E);
-  if(si!==-1&&ei!==-1)src=src.slice(0,si)+src.slice(ei+E.length);
-  var inj=S+'var __IFD__='+dj+';(function(){try{var s=localStorage.getItem("portfolio_film_data");if(!s||Object.keys(JSON.parse(s)).length===0)localStorage.setItem("portfolio_film_data",JSON.stringify(__IFD__));}catch(e){}})();'+E;
-  src=src.replace('var EDIT_PW',inj+'\nvar EDIT_PW');
-  var blob=new Blob([src],{type:'text/html;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='portfolio_songhayeon.html';a.click();URL.revokeObjectURL(a.href);
-  var msg=document.getElementById('mSaved');msg.textContent='다운로드 완료 ';msg.classList.add('show');
-  setTimeout(function(){msg.textContent='저장되었습니다 ';msg.classList.remove('show')},3000);
-}
 
 var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('v')})},{threshold:.08});
 document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
 </script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  
+
+  const FB_CONFIG = {
+    apiKey: "AIzaSyAusqcKDQqoXG73zRoD3XGQRUIKs6q7Y8w",
+    authDomain: "aailens.firebaseapp.com",
+    databaseURL: "https://aailens-default-rtdb.firebaseio.com",
+    projectId: "aailens",
+    storageBucket: "aailens.firebasestorage.app",
+    messagingSenderId: "282233417651",
+    appId: "1:282233417651:web:c05c78cfe769bf947e25c6"
+  };
+
+  try {
+    const app = initializeApp(FB_CONFIG);
+    const database = getDatabase(app);
+
+    // 전역에서 접근 가능하도록 노출
+    window._fbDB = database;
+    window._fbRef = ref;
+    window._fbSet = set;
+    window._fbOnValue = onValue;
+    // 대외활동 실시간 수신
+    onValue(ref(database, 'portfolio_acts'), function(snap) {
+      var data = snap.val();
+      if (data && Array.isArray(data)) {
+        window._actCache = data;
+        _actCache = data;
+        try { localStorage.setItem('portfolio_act_data', JSON.stringify(data)); } catch(e) {}
+        if (typeof renderUserActs === 'function') renderUserActs();
+      }
+    });
+
+    // 실시간 데이터 수신
+    onValue(ref(database, 'portfolio_films'), function(snap) {
+      var data = snap.val();
+      if (data) {
+        window._filmCache = data;
+        try { localStorage.setItem('portfolio_film_data', JSON.stringify(data)); } catch(e) {}
+      }
+    });
+
+    console.log('Firebase 연결 완료');
+  } catch(e) {
+    console.warn('Firebase 초기화 실패:', e);
+  }
+</script>
+
 </body>
 </html>
