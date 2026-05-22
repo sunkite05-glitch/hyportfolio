@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>송해연 — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6fbff;--b50:#eaf5ff;--b100:#cce8ff;--b200:#96d0f7;--b300:#55b4f0;
+  --b400:#1e96e8;--b500:#0a78c8;--b600:#055499;
+  --ink:#0d1f30;--ink2:#2d4a62;--ink3:#5a7a94;--ink4:#92b0c4;
+  --glass:rgba(255,255,255,.72);--glass-b:rgba(255,255,255,.5);
+  --line:rgba(30,150,232,.12);--line2:rgba(30,150,232,.22);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Pretendard','Plus Jakarta Sans',sans-serif;font-weight:400;overflow-x:hidden;cursor:none;min-height:100vh}
+.cur{width:8px;height:8px;background:var(--b400);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+.cur-r{width:30px;height:30px;border:1.5px solid rgba(30,150,232,.4);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .16s ease}
+.blob-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
+.blob-1{width:700px;height:700px;background:radial-gradient(circle,#c2e4ff,transparent 70%);top:-200px;right:-100px;animation:drift1 18s ease-in-out infinite}
+.blob-2{width:500px;height:500px;background:radial-gradient(circle,#daf0ff,transparent 70%);bottom:-100px;left:-80px;animation:drift2 22s ease-in-out infinite}
+.blob-3{width:380px;height:380px;background:radial-gradient(circle,#e8f7ff,transparent 70%);top:40%;left:30%;animation:drift3 15s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}33%{transform:translate(20px,-20px)}66%{transform:translate(-20px,20px)}}
+
+
+header{position:fixed;top:0;left:0;right:0;z-index:500;padding:16px 56px;display:flex;justify-content:space-between;align-items:center;background:rgba(246,251,255,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.logo{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--ink2);cursor:none}
+.logo em{color:var(--b400);font-style:normal}
+.back-btn{font-size:12px;font-weight:500;color:var(--ink3);background:none;border:none;display:flex;align-items:center;gap:6px;opacity:0;pointer-events:none;transition:opacity .3s,color .2s}
+.back-btn.on{opacity:1;pointer-events:auto}
+.back-btn:hover{color:var(--b400)}
+nav{display:flex;gap:24px}
+nav a{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--ink3);text-decoration:none;transition:color .2s}
+nav a:hover{color:var(--b400)}
+.page{position:fixed;inset:0;overflow-y:auto;transition:transform .55s cubic-bezier(.16,1,.3,1),opacity .55s ease;will-change:transform,opacity;z-index:1}
+.page.hidden{transform:translateY(48px);opacity:0;pointer-events:none}
+.page.out{transform:translateY(-32px);opacity:0;pointer-events:none}
+.page.active{transform:translateY(0);opacity:1;pointer-events:auto}
+.gc{background:var(--glass);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:20px;box-shadow:0 2px 32px rgba(30,120,200,.07),0 0 0 1px rgba(30,150,232,.07)}
+.gc-b{background:var(--glass-b);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 1px 16px rgba(30,120,200,.05)}
+
+/* HERO */
+.hero{min-height:100vh;padding-top:80px;display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:2}
+.hero-l{padding:100px 56px 80px;display:flex;flex-direction:column;justify-content:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(30,150,232,.1);border:1px solid rgba(30,150,232,.2);border-radius:20px;padding:5px 14px;font-size:11.5px;font-weight:600;letter-spacing:.08em;color:var(--b500);text-transform:uppercase;margin-bottom:28px;width:fit-content}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--b400);display:block;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(56px,7.5vw,92px);font-weight:800;line-height:.96;letter-spacing:.01em;color:var(--ink);margin-bottom:10px}
+.hero-name em{color:var(--b400);font-style:normal}
+.hero-dept{font-size:12.5px;font-weight:500;color:var(--ink3);margin-bottom:20px;letter-spacing:.01em;line-height:1.6}
+.hero-role{font-size:13px;font-weight:500;letter-spacing:.12em;color:var(--ink3);margin-bottom:32px;text-transform:uppercase}
+.hero-desc{font-size:15px;line-height:1.9;color:var(--ink2);max-width:370px;margin-bottom:48px}
+.hero-stats{display:flex;gap:0}
+.stat{padding:0 32px;border-right:1px solid var(--line2)}
+.stat:first-child{padding-left:0}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:var(--ink);line-height:1}
+.stat-n sup{font-size:18px;color:var(--b400)}
+.stat-l{font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.06em;margin-top:4px}
+.hero-r{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.float-ring{position:absolute;border-radius:50%;border:1px solid rgba(30,150,232,.15)}
+.float-ring:nth-child(1){width:420px;height:420px;animation:spinsl 40s linear infinite}
+.float-ring:nth-child(2){width:300px;height:300px;animation:spinsl 28s linear infinite reverse;border-color:rgba(30,150,232,.1)}
+.float-ring:nth-child(3){width:200px;height:200px;animation:spinsl 20s linear infinite;border-style:dashed}
+.ring-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--b300);opacity:.7;top:-4px;left:calc(50% - 4px)}
+.center-badge{position:relative;z-index:2;width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#d4edff,#a8d8f8);border:2px solid rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 8px 40px rgba(30,150,232,.2),inset 0 1px 0 rgba(255,255,255,.8)}
+.cb-sub{font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--b600);text-transform:uppercase}
+.cb-main{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.chip{position:absolute;background:var(--glass);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.9);border-radius:30px;padding:9px 18px;font-size:12px;font-weight:600;color:var(--ink2);box-shadow:0 4px 20px rgba(30,120,200,.1);white-space:nowrap}
+.chip.c1{top:22%;left:8%;animation:chipfloat 7s ease-in-out infinite}
+.chip.c2{top:35%;right:6%;animation:chipfloat 8.5s ease-in-out infinite .8s}
+.chip.c3{bottom:30%;left:12%;animation:chipfloat 6.5s ease-in-out infinite 1.5s}
+.chip.c4{bottom:22%;right:10%;animation:chipfloat 9s ease-in-out infinite .4s}
+.chip .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--b300);margin-right:6px;vertical-align:middle}
+@keyframes chipfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spinsl{to{transform:rotate(360deg)}}
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;background:rgba(255,255,255,.5);overflow:hidden}
+.ticker-t{display:flex;gap:48px;white-space:nowrap;animation:tick 22s linear infinite}
+.tick-i{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--ink3);flex-shrink:0}.tick-i .h{color:var(--b400)}
+.tick-i b{color:var(--b400);margin:0 6px;font-weight:400}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.menu-wrap{padding:48px 56px 96px;position:relative;z-index:2}
+.menu-label{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--ink4);text-transform:uppercase;margin-bottom:20px}
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.menu-card{background:var(--glass);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:32px 28px 44px;position:relative;overflow:hidden;transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s,border-color .28s;box-shadow:0 2px 20px rgba(30,120,200,.06)}
+.menu-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(30,120,200,.14);border-color:rgba(30,150,232,.35)}
+.menu-card::after{content:'';position:absolute;inset:0;border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.4),transparent 60%);pointer-events:none}
+.mc-num{font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--b400);text-transform:uppercase;margin-bottom:12px}
+.mc-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;color:var(--ink);line-height:1.25}
+.mc-sub{font-size:12px;color:var(--ink3);line-height:1.7}
+.mc-arrow{position:absolute;bottom:22px;right:22px;font-size:16px;color:var(--b200);transition:color .25s,transform .25s}
+.menu-card:hover .mc-arrow{color:var(--b400);transform:translate(3px,-3px)}
+
+/* 디테일 공통 */
+.det{padding-top:80px;position:relative;z-index:2}
+.det-hero{padding:52px 56px 40px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;background:linear-gradient(180deg,rgba(200,232,255,.35),transparent)}
+.det-num{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--b400);text-transform:uppercase;margin-bottom:8px}
+.det-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(38px,5vw,64px);font-weight:800;line-height:1;color:var(--ink);letter-spacing:-.025em}
+.det-meta{font-size:11.5px;font-weight:500;color:var(--ink3);letter-spacing:.06em;text-align:right;line-height:1.9}
+.det-body{padding:48px 56px}
+
+/* AI */
+.ai-top-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.ai-feat-card{padding:36px 32px}
+.feat-pill{display:inline-flex;align-items:center;gap:7px;background:var(--b400);color:#fff;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 15px;border-radius:20px;margin-bottom:14px}
+.feat-pill::before{content:'●';font-size:8px;animation:pulse 1.4s ease infinite}
+.feat-pill.green{background:#1da472}
+.ai-big-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:700;margin-bottom:10px;line-height:1.3;color:var(--ink)}
+.ai-desc{font-size:13px;line-height:1.9;color:var(--ink2)}
+.ai-hint{font-size:11px;font-weight:600;color:var(--b500);letter-spacing:.04em;margin-top:12px}
+.yt-btn{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:9px 18px;background:rgba(255,0,0,.08);border:1px solid rgba(255,0,0,.2);border-radius:20px;font-size:12px;font-weight:600;color:#c00;text-decoration:none;transition:background .2s,transform .2s;cursor:none}
+.yt-btn:hover{background:rgba(255,0,0,.15);transform:translateY(-2px)}
+.yt-btn::before{content:'';font-size:10px}
+.k-badge{width:130px;height:130px;border-radius:50%;background:linear-gradient(145deg,#cce8ff,#8ecff5);border:3px solid rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 8px 36px rgba(30,150,232,.25),inset 0 1px 0 rgba(255,255,255,.7);position:relative;flex-shrink:0}
+.k-badge::before{content:'';position:absolute;inset:-12px;border-radius:50%;border:1.5px dashed rgba(30,150,232,.3);animation:spinsl 14s linear infinite}
+.k-lbl{font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--b600);text-transform:uppercase}
+.k-main{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--b600)}
+.ai-feat-inner{display:flex;gap:24px;align-items:center}
+.ai-feat-text{flex:1}
+.ai-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ai-card{padding:26px 24px;transition:transform .25s,box-shadow .25s}
+.ai-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(30,120,200,.12)}
+.ai-ctag{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--b400);text-transform:uppercase;margin-bottom:10px}
+.ai-ctitle{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px;color:var(--ink);line-height:1.3}
+.ai-cbody{font-size:12.5px;line-height:1.85;color:var(--ink2)}
+.ai-clist{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.ai-clist li{font-size:12px;color:var(--ink3);list-style:none;padding-left:14px;position:relative;line-height:1.6}
+.ai-clist li::before{content:'–';position:absolute;left:0;color:var(--b300)}
+.tool-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.t-pill{font-size:11px;font-weight:500;padding:6px 13px;border-radius:16px;border:1px solid var(--line2);color:var(--ink2);background:rgba(255,255,255,.7)}
+.t-pill.hot{background:rgba(30,150,232,.1);border-color:rgba(30,150,232,.3);color:var(--b500);font-weight:600}
+
+/* 필모 */
+.f-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.f-btn{font-size:11.5px;font-weight:500;padding:8px 18px;border-radius:20px;border:1px solid var(--line2);color:var(--ink3);background:rgba(255,255,255,.7);transition:all .2s}
+.f-btn.on,.f-btn:hover{background:var(--b400);border-color:var(--b400);color:#fff}
+.film-row{display:grid;grid-template-columns:64px 1fr 120px 120px;align-items:center;gap:18px;padding:16px;border-radius:12px;transition:background .2s;cursor:none}
+.film-row:hover{background:rgba(255,255,255,.65)}
+.film-row+.film-row{border-top:1px solid var(--line)}
+.film-row.gone{display:none}
+.fy{font-size:11px;font-weight:600;color:var(--ink4);letter-spacing:.06em}
+.ft{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:2px;transition:color .2s}
+.film-row:hover .ft{color:var(--b500)}
+.fn{font-size:12px;color:var(--ink3)}
+.r-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:10px;text-align:center;white-space:nowrap}
+.r-dir{background:rgba(30,150,232,.12);color:var(--b500);border:1px solid rgba(30,150,232,.25)}
+.r-pd{background:rgba(30,150,232,.06);color:var(--ink2);border:1px solid var(--line)}
+.r-crew{background:transparent;color:var(--ink3);border:1px solid var(--line)}
+.r-ad{background:rgba(100,180,230,.1);color:var(--b600);border:1px solid rgba(100,180,230,.25)}
+.b-rise{font-size:9.5px;font-weight:600;padding:4px 10px;border-radius:8px;background:rgba(30,150,232,.1);color:var(--b500);border:1px solid rgba(30,150,232,.25);letter-spacing:.08em}
+.b-plan{font-size:9.5px;font-weight:500;padding:4px 10px;border-radius:8px;background:rgba(200,220,240,.25);color:var(--ink3);border:1px solid var(--line)}
+
+/* 뷰어/편집 분기 */
+.edit-only{display:none}
+body.edit-mode .edit-only{display:block}
+body.edit-mode .view-only{display:none}
+.edit-badge{position:fixed;bottom:20px;left:20px;z-index:600;background:rgba(30,150,232,.15);border:1px solid rgba(30,150,232,.35);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--b500);letter-spacing:.06em;backdrop-filter:blur(8px);display:none}
+body.edit-mode .edit-badge{display:block}
+.pw-bg{position:fixed;inset:0;background:rgba(13,31,48,.5);backdrop-filter:blur(10px);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.pw-bg.open{opacity:1;pointer-events:auto}
+.pw-box{background:var(--glass);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:20px;padding:36px 40px;width:320px;box-shadow:0 24px 80px rgba(13,31,48,.2);text-align:center}
+.pw-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.pw-sub{font-size:12px;color:var(--ink3);margin-bottom:22px}
+.pw-inp{width:100%;padding:11px 16px;border:1px solid var(--line2);border-radius:12px;font-size:14px;font-family:'Pretendard',sans-serif;background:rgba(255,255,255,.8);outline:none;text-align:center;letter-spacing:.2em;transition:border-color .2s;color:var(--ink)}
+.pw-inp:focus{border-color:var(--b300)}
+.pw-err{font-size:11.5px;color:#e05555;margin-top:8px;height:16px}
+.pw-btn{margin-top:16px;width:100%;padding:11px;background:var(--b400);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;transition:background .2s}
+.pw-btn:hover{background:var(--b500)}
+
+/* 필름 모달 */
+.modal-bg{position:fixed;inset:0;background:rgba(13,31,48,.45);backdrop-filter:blur(8px);z-index:800;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-bg.open{opacity:1;pointer-events:auto}
+.modal{background:var(--glass);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:24px;width:min(540px,92vw);max-height:85vh;overflow-y:auto;padding:36px;box-shadow:0 24px 80px rgba(13,31,48,.2);position:relative}
+.modal-close{position:absolute;top:20px;right:20px;width:32px;height:32px;border-radius:50%;background:rgba(30,150,232,.1);border:1px solid rgba(30,150,232,.2);color:var(--b500);font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.modal-close:hover{background:rgba(30,150,232,.2)}
+.modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.modal-role{font-size:12px;font-weight:600;color:var(--b400);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.modal-still{width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--b50);margin-bottom:20px;border:1px solid var(--line)}
+.modal-still img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:background .2s}
+.ph:hover{background:rgba(30,150,232,.06)}
+.ph span{font-size:12px;color:var(--ink3);font-weight:500}
+.ph .plus{font-size:28px;color:var(--b200)}
+.m-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;margin-bottom:6px}
+.m-genre-inp{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:10px;padding:8px 13px;font-size:13px;font-family:'Pretendard',sans-serif;outline:none;width:100%;margin-bottom:14px;transition:border-color .2s;color:var(--ink)}
+.m-genre-inp:focus{border-color:var(--b300)}
+.m-log{font-size:14px;line-height:1.85;color:var(--ink2);background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-height:72px;outline:none;width:100%;font-family:'Pretendard',sans-serif;resize:vertical;transition:border-color .2s;color:var(--ink)}
+.m-log:focus{border-color:var(--b300)}
+.m-save{background:var(--b400);color:#fff;border:none;border-radius:14px;padding:11px 24px;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;transition:background .2s,transform .2s;margin-top:16px}
+.m-save:hover{background:var(--b500);transform:translateY(-1px)}
+.m-export{background:var(--b600);color:#fff;border:none;border-radius:14px;padding:11px 24px;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;transition:background .2s;margin-top:16px;margin-left:8px}
+.m-saved{font-size:12px;color:var(--b500);font-weight:500;margin-left:12px;opacity:0;transition:opacity .3s;display:inline-block;margin-top:16px}
+.m-saved.show{opacity:1}
+
+/* 역량 */
+.sk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sk-card{padding:32px 28px}
+.sk-card.wide{grid-column:span 2}
+.sk-cat{font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--b400);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.sk-cat::after{content:'';flex:1;height:1px;background:var(--line2)}
+.sk-rows{display:flex;flex-direction:column;gap:14px}
+.sk-row{display:flex;align-items:center;gap:12px}
+.sk-name{font-size:13px;color:var(--ink2);width:168px;flex-shrink:0}
+.sk-bar{flex:1;height:3px;background:var(--b100);border-radius:4px;overflow:hidden}
+.sk-fill{height:100%;background:linear-gradient(90deg,var(--b200),var(--b400));width:0;border-radius:4px;transition:width 1.3s cubic-bezier(.16,1,.3,1)}
+.sk-pct{font-size:10.5px;font-weight:600;color:var(--ink3);width:32px;text-align:right;flex-shrink:0}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:11px;font-weight:500;padding:7px 15px;border-radius:20px;border:1px solid var(--line);color:var(--ink3);background:rgba(255,255,255,.7)}.tag::before{content:"#";color:var(--b300);margin-right:2px;font-weight:600}
+.tag.h{background:rgba(30,150,232,.08);border-color:rgba(30,150,232,.28);color:var(--b500);font-weight:600}.tag.h::before{color:var(--b400)}
+
+/* 대외활동 */
+.act-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.act-tab{font-size:12px;font-weight:600;padding:9px 20px;border-radius:20px;border:1px solid var(--line2);color:var(--ink3);background:rgba(255,255,255,.7);transition:all .2s}
+.act-tab.on,.act-tab:hover{background:var(--b400);border-color:var(--b400);color:#fff}
+.act-sec{display:none}
+.act-sec.on{display:block}
+.act-row{display:grid;grid-template-columns:76px 1fr;gap:20px;align-items:start;padding:22px 16px;border-radius:12px;transition:background .2s}
+.act-row:hover{background:rgba(255,255,255,.6)}
+.act-row+.act-row{border-top:1px solid var(--line)}
+.act-yr{font-size:11px;font-weight:700;color:var(--b400);letter-spacing:.04em;padding-top:2px;line-height:1.6}
+.act-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;margin-bottom:5px;color:var(--ink)}
+.act-org{font-size:12.5px;color:var(--ink3);line-height:1.7}
+.act-ic{font-size:18px;opacity:.7;padding-top:2px}
+
+/* 프로필 */
+.pr-grid{display:grid;grid-template-columns:280px 1fr;gap:12px}
+.pr-card{padding:24px 24px}
+.pr-row{padding:10px 0;border-bottom:1px solid var(--line)}
+.pr-key{font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;margin-bottom:4px}
+.pr-val{font-size:13px;color:var(--ink);line-height:1.6}
+.pr-val a{color:var(--b400);text-decoration:none;font-weight:500}
+.st-card{padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between}
+.st-q{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(15px,1.8vw,20px);font-weight:700;line-height:1.4;margin-bottom:14px;color:var(--ink);padding-left:18px;position:relative}
+.st-q::before{content:'"';position:absolute;left:0;top:-4px;font-size:40px;color:var(--b300);line-height:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800}
+.st-body{font-size:12.5px;line-height:1.8;color:var(--ink2)}
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.edu-card{padding:18px 20px;position:relative}
+.edu-card.main{border-top:3px solid var(--b400)}
+.edu-sch{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;margin-bottom:3px;color:var(--ink)}
+.edu-d{font-size:12px;color:var(--ink2);margin-bottom:3px}
+.edu-p{font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.04em}
+.edu-gpa{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--b400);position:absolute;bottom:14px;right:16px}
+
+footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:rgba(246,251,255,.7);backdrop-filter:blur(12px);position:relative;z-index:2}
+.f-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;color:var(--ink)}
+.f-info{font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.04em}
+.f-info a{color:var(--b400);text-decoration:none}
+.f-back{font-size:11.5px;font-weight:600;color:var(--b400);cursor:none}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.fi.v{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){
+  header{padding:14px 20px}nav{display:none}
+  .hero{grid-template-columns:1fr}.hero-r{display:none}.hero-l{padding:60px 20px 60px}
+  .menu-wrap,.det-body{padding:32px 20px 60px}
+  .det-hero{padding:36px 20px 28px;flex-direction:column;gap:12px;align-items:flex-start}
+  .menu-grid,.ai-top-grid{grid-template-columns:1fr 1fr}
+  .ai-grid3,.sk-grid,.edu-grid{grid-template-columns:1fr}.sk-card.wide{grid-column:span 1}
+  .pr-grid{grid-template-columns:1fr}
+  .film-row{grid-template-columns:50px 1fr 90px}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px}
+}
+
+
+
+
+
+
+
+
+</style>
+</head>
+<body>
+<div class="blob-wrap"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+<div class="cur" id="cur"></div><div class="cur-r" id="curR"></div>
+<div class="edit-badge"> 편집 모드</div>
+
+<div class="pw-bg" id="pwBg">
+  <div class="pw-box">
+    <div class="pw-title">편집자 모드</div>
+    <div class="pw-sub">비밀번호를 입력하세요</div>
+    <input class="pw-inp" id="pwInp" type="password" maxlength="20" placeholder="••••••">
+    <div class="pw-err" id="pwErr"></div>
+    <button class="pw-btn" onclick="checkPw()">확인</button>
+  </div>
+</div>
+
+
+
+<header>
+  <div class="logo" id="logo">SONG HAE YEON</div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 이전</button>
+  <button class="back-btn edit-only" id="exportBtn" onclick="exportHTML()" style="opacity:1;pointer-events:auto;background:rgba(30,150,232,.12);border:1px solid rgba(30,150,232,.3);border-radius:20px;padding:6px 16px;color:var(--b500)">내보내기</button>
+  <nav>
+    <a href="#" onclick="go('ai');return false">AI 제작</a>
+    <a href="#" onclick="go('film');return false">필모그래피</a>
+    <a href="#" onclick="go('skills');return false">역량</a>
+    <a href="#" onclick="go('act');return false">대외활동</a>
+    <a href="#" onclick="go('profile');return false">프로필</a>
+  </nav>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="pg-home">
+  <div class="hero">
+    <div class="hero-l">
+      <div class="hero-eyebrow">Film &amp; AI Content Creator</div>
+      <h1 class="hero-name" onclick="go('profile')" style="cursor:none">송<em>해연</em></h1>
+      <div class="hero-dept">국민대학교 공연예술학부 영화전공, 문화예술경영학융합전공</div>
+      <div class="hero-role">PD · Director · AI Creator</div>
+      <p class="hero-desc">단편영화를 포함한 영상 제작 20편 이상의 현장 경험과 생성형 AI 영상 제작 역량을 겸비한 콘텐츠 크리에이터. 내러티브부터 브랜드 콘텐츠까지, 이야기를 영상으로 구현합니다.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n">20<sup>+</sup></div><div class="stat-l">영상 제작 참여작</div></div>
+        <div class="stat"><div class="stat-n">4.21</div><div class="stat-l">학점 (국민대)</div></div>
+      </div>
+    </div>
+    <div class="hero-r">
+      <div class="float-ring"><div class="ring-dot"></div></div>
+      <div class="float-ring"><div class="ring-dot"></div></div>
+      <div class="float-ring"><div class="ring-dot"></div></div>
+      <div class="center-badge"><span class="cb-sub">Film &</span><span class="cb-main">AI</span><span class="cb-sub">Creator</span></div>
+      <div class="chip c1"><span class="dot"></span>KlingAI Ambassador</div>
+      <div class="chip c2"><span class="dot"></span>영상 제작 20+편</div>
+      <div class="chip c3"><span class="dot"></span>RISE 우수사례</div>
+      <div class="chip c4"><span class="dot"></span>졸업영화제 위원장</div>
+    </div>
+  </div>
+  <div class="ticker">
+    <div class="ticker-t">
+      <span class="tick-i">KlingAI Ambassador</span><span class="tick-i">단편영화 PD</span><span class="tick-i">RISE 우수사례</span><span class="tick-i">AI Content Creator</span><span class="tick-i">국민대학교 영화전공</span><span class="tick-i">문화예술경영</span><span class="tick-i">졸업영화제 위원장</span>
+      <span class="tick-i">KlingAI Ambassador</span><span class="tick-i">단편영화 PD</span><span class="tick-i">RISE 우수사례</span><span class="tick-i">AI Content Creator</span><span class="tick-i">국민대학교 영화전공</span><span class="tick-i">문화예술경영</span><span class="tick-i">졸업영화제 위원장</span>
+    </div>
+  </div>
+  <div class="menu-wrap">
+    <div class="menu-label">— 섹션 선택</div>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="go('profile')" style="grid-column:span 4;display:grid;grid-template-columns:1fr auto;align-items:center;padding:24px 32px"><div><div class="mc-num" style="margin-bottom:6px">01</div><div class="mc-title" style="font-size:16px;margin-bottom:4px">송해연 · 프로필</div><div class="mc-sub">국민대학교 공연예술학부 영화전공 · 문화예술경영학융합전공 · GPA 4.21</div></div><div class="mc-arrow" style="position:static;font-size:20px">↗</div></div>
+      <div class="menu-card" onclick="go('ai')"><div class="mc-num">02</div><div class="mc-title">AI 영상 제작</div><div class="mc-sub">KlingAI 앰버서더<br>생성형 AI 콘텐츠</div><div class="mc-arrow">↗</div></div>
+      <div class="menu-card" onclick="go('film')"><div class="mc-num">03</div><div class="mc-title">필모그래피</div><div class="mc-sub">영상 제작 20+편<br>PD · 연출 · 제작</div><div class="mc-arrow">↗</div></div>
+      <div class="menu-card" onclick="go('skills')"><div class="mc-num">04</div><div class="mc-title">역량</div><div class="mc-sub">영상 · AI 툴<br>기획 · 분석</div><div class="mc-arrow">↗</div></div>
+      <div class="menu-card" onclick="go('act')"><div class="mc-num">05</div><div class="mc-title">대외활동</div><div class="mc-sub">수상·수료·활동<br>2019–2026</div><div class="mc-arrow">↗</div></div>
+    </div>
+  </div>
+  <footer><div class="f-name">송해연 — Portfolio 2026</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-info">국민대학교 공연예술학부 영화전공</div></footer>
+</div>
+
+<!-- AI -->
+<div class="page hidden" id="pg-ai">
+  <div class="det">
+    <div class="det-hero"><div><div class="det-num">02 —</div><div class="det-title">AI 영상 제작</div></div><div class="det-meta">생성형 AI · Video Production<br>Prompt Engineering</div></div>
+    <div class="det-body">
+      <div class="ai-top-grid fi">
+        <div class="gc ai-feat-card">
+          <div class="ai-feat-inner">
+            <div class="ai-feat-text">
+              <div class="feat-pill">공식 앰버서더 · 2026</div>
+              <div class="ai-big-title">KlingAI × MBC C&I<br>Kling Nextgen 2026</div>
+              <p class="ai-desc">국민대학교 공식 앰버서더로 선정. Text-to-Video, Image-to-Video, Prompt Optimization, AI 편집 워크플로우 전반 실무 경험 보유.</p>
+              <p class="ai-hint">→ 드라마·애니메이션형 AI 영상 즉시 제작 가능</p>
+            </div>
+            <div class="k-badge"><div class="k-lbl">Official</div><div class="k-main">Kling</div><div class="k-lbl">Ambassador</div></div>
+          </div>
+        </div>
+        <div class="gc ai-feat-card">
+          <div class="feat-pill green">RISE 우수사례 · 2025</div>
+          <div class="ai-big-title">단편영화 〈RUN〉<br>각본 · 연출 · 편집</div>
+          <p class="ai-desc">국민대학교 라이즈사업단 우수사례로 선정된 단편영화. 기획부터 최종 편집까지 전 과정을 단독으로 수행하며 내러티브 제작 역량을 검증.</p>
+          <a class="yt-btn" href="https://youtu.be/fRqBlaioZbQ" target="_blank">포트폴리오 영상 보기</a>
+        </div>
+      </div>
+      <div class="ai-grid3">
+        <div class="gc-b ai-card fi">
+          <div class="ai-ctag">생성형 AI</div>
+          <div class="ai-ctitle">이미지 · 영상 생성</div>
+          <p class="ai-cbody">KlingAI, Google AI Skilling 수료 및 북악스터디 46기 AI Tool 비교 분석 활동으로 다양한 생성형 AI 툴 스택 구축.</p>
+          <ul class="ai-clist">
+            <li>Text-to-Video / Image-to-Video 변환</li>
+            <li>캐릭터·분위기 프롬프트 설계</li>
+            <li>북악스터디 46기 — AI Tool 비교 분석 (<a href="https://sunkite05-glitch.github.io/ailens/" target="_blank" style="color:var(--b400)">보기 →</a>)</li>
+            <li>AI Study 'promlett' 운영 (2026)</li>
+          </ul>
+        </div>
+        <div class="gc-b ai-card fi">
+          <div class="ai-ctag">내러티브 기획</div>
+          <div class="ai-ctitle">스토리 · 콘티 작성</div>
+          <p class="ai-cbody">〈RUN〉 각본·연출 경험을 바탕으로 AI 콘텐츠에 내러티브 구조를 설계.</p>
+          <ul class="ai-clist">
+            <li>각본 → 장면 구성 → 콘티 제작</li>
+            <li>장르별 톤앤매너 분석</li>
+            <li>드라마·애니메이션 형식 이해</li>
+            <li>레퍼런스 조사 및 세계관 구축</li>
+          </ul>
+        </div>
+        <div class="gc-b ai-card fi">
+          <div class="ai-ctag">편집 · 후반 작업</div>
+          <div class="ai-ctitle">영상 편집 · 보완</div>
+          <p class="ai-cbody">촬영·편집 경험과 AI 생성 결과물을 결합한 Production Workflow.</p>
+          <ul class="ai-clist">
+            <li>컷 구성 및 편집 자료 정리</li>
+            <li>생성 결과물 검토 및 수정 보완</li>
+            <li>홍보영상 촬영·편집 독립 수행</li>
+          </ul>
+        </div>
+        <div class="gc-b ai-card fi" style="grid-column:span 3">
+          <div class="ai-ctag">AI 툴 스택</div>
+          <div class="tool-wrap">
+            <span class="t-pill hot">KlingAI</span><span class="t-pill hot">Prompt Engineering</span><span class="t-pill hot">Text-to-Video</span><span class="t-pill">Image-to-Video</span><span class="t-pill">Midjourney</span><span class="t-pill">Runway</span><span class="t-pill">ChatGPT</span><span class="t-pill">Gemini</span><span class="t-pill">VARCO AI</span><span class="t-pill">Google AI Tools</span><span class="t-pill">Storyboard</span><span class="t-pill">LXD Methodology</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
+  </div>
+</div>
+
+<!-- FILM -->
+<div class="page hidden" id="pg-film">
+  <div class="det">
+    <div class="det-hero"><div><div class="det-num">03 —</div><div class="det-title">필모그래피</div></div><div class="det-meta">20+ · 2024–2026<br>클릭하면 상세 정보 확인</div></div>
+    <div class="det-body">
+      <div class="f-filters fi">
+        <button class="f-btn on" onclick="filt('all',this)">전체</button>
+        <button class="f-btn" onclick="filt('director',this)">연출</button>
+        <button class="f-btn" onclick="filt('pd',this)">PD</button>
+        <button class="f-btn" onclick="filt('crew',this)">제작·스태프</button>
+        <button class="f-btn" onclick="filt('ad',this)">광고·홍보</button>
+      </div>
+      <div class="gc fi" style="padding:8px 12px">
+        <div class="film-row" data-t="director" onclick="openModal('엄마는 외계인','연출 감독','director','alien')"><div class="fy">2026</div><div><div class="ft">엄마는 외계인</div><div class="fn">연출 감독 · 8월 촬영 예정</div></div><div class="r-tag r-dir">Director</div><div class="b-plan">예정작</div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('COOK ME!','제작부','crew','cookme')"><div class="fy">2026</div><div><div class="ft">COOK ME!</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="director" onclick="openModal('RUN','각본·연출·편집','director','run')"><div class="fy">2025</div><div><div class="ft">RUN</div><div class="fn">각본 · 연출 · 편집</div></div><div class="r-tag r-dir">Director</div><div class="b-rise">RISE 우수사례</div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('희애는 사라지지 않는다','PD','pd','heeae')"><div class="fy">2025</div><div><div class="ft">희애는 사라지지 않는다</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div></div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('Let It Happen','PD','pd','lih')"><div class="fy">2025</div><div><div class="ft">Let It Happen</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div></div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('3분짜리 인생','PD','pd','min3')"><div class="fy">2025</div><div><div class="ft">3분짜리 인생</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('無한','제작부','crew','muhan')"><div class="fy">2025</div><div><div class="ft">無한</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('이갈이','제작부','crew','igagi')"><div class="fy">2025</div><div><div class="ft">이갈이</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('BLE SEIREN','제작부','crew','bles')"><div class="fy">2025</div><div><div class="ft">BLE SEIREN</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="ad" onclick="openModal('FINO 광고','FD','ad','fino')"><div class="fy">2025</div><div><div class="ft">FINO 광고</div><div class="fn">FD</div></div><div class="r-tag r-ad">FD</div><div></div></div>
+        <div class="film-row" data-t="ad" onclick="openModal('상계청소년문화의집 홍보영상','촬영·편집','ad','sangye')"><div class="fy">2025</div><div><div class="ft">상계청소년문화의집 홍보영상</div><div class="fn">촬영 · 편집</div></div><div class="r-tag r-ad">홍보영상</div><div></div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('어쩌다 당신에게도','PD','pd','eojj')"><div class="fy">2024</div><div><div class="ft">어쩌다 당신에게도</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div></div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('고상하','라인 PD','pd','gosang')"><div class="fy">2024</div><div><div class="ft">고상하</div><div class="fn">라인 PD</div></div><div class="r-tag r-pd">Line PD</div><div></div></div>
+        <div class="film-row" data-t="pd" onclick="openModal('국민대 졸업영화제 에티켓 영상','PD·조연출','pd','etiq')"><div class="fy">2024</div><div><div class="ft">국민대 졸업영화제 에티켓 영상</div><div class="fn">PD · 조연출</div></div><div class="r-tag r-pd">PD</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('좀비의 꿈','연출부','crew','zombie')"><div class="fy">2024</div><div><div class="ft">좀비의 꿈</div><div class="fn">연출부</div></div><div class="r-tag r-crew">연출부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('깨밭의 도깨비','촬영부','crew','kkaebat')"><div class="fy">2024</div><div><div class="ft">깨밭의 도깨비</div><div class="fn">촬영부</div></div><div class="r-tag r-crew">촬영부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('우리의 밤','연출부','crew','ournight')"><div class="fy">2024</div><div><div class="ft">우리의 밤</div><div class="fn">연출부</div></div><div class="r-tag r-crew">연출부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('WET DREAM','제작부','crew','wet')"><div class="fy">2024</div><div><div class="ft">WET DREAM</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('로드 투 천국','제작부','crew','road')"><div class="fy">2024</div><div><div class="ft">로드 투 천국</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div></div></div>
+        <div class="film-row" data-t="crew" onclick="openModal('층간소음','스크립터','crew','floor')"><div class="fy">2024</div><div><div class="ft">층간소음</div><div class="fn">스크립터</div></div><div class="r-tag r-crew">스크립터</div><div></div></div>
+        <div class="film-row" data-t="ad" onclick="openModal('MBN FITNESS 삼송점 광고','영상 광고 제작','ad','mbn')"><div class="fy">2024</div><div><div class="ft">MBN FITNESS 삼송점 광고</div><div class="fn">엘리베이터 영상 광고 제작</div></div><div class="r-tag r-ad">광고</div><div></div></div>
+        <div class="film-row" data-t="ad" onclick="openModal('레오제이 화보 촬영','FD','ad','leoj')"><div class="fy">2024</div><div><div class="ft">레오제이 화보 촬영 현장</div><div class="fn">FD</div></div><div class="r-tag r-ad">FD</div><div></div></div>
+      </div>
+    </div>
+    <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
+  </div>
+</div>
+
+<!-- 필름 모달 -->
+<div class="modal-bg" id="modalBg" onclick="bgClose(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"></button>
+    <div class="modal-title" id="mTitle"></div>
+    <div class="modal-role" id="mRole"></div>
+    <div class="modal-still" id="mStill">
+      <div class="ph edit-only" id="mPh" onclick="document.getElementById('mFile').click()">
+        <div class="plus">＋</div><span>스틸컷 추가 (클릭)</span><span style="font-size:11px;color:var(--ink4)">JPG / PNG / WEBP</span>
+      </div>
+      <img id="mImg" style="display:none" alt="스틸컷" onclick="if(editMode)document.getElementById('mFile').click()">
+      <input type="file" id="mFile" accept="image/*" style="display:none" onchange="handleImg(event)">
+    </div>
+    <div id="mGenreView" class="view-only" style="margin-bottom:12px"></div>
+    <div id="mLogView" class="view-only" style="font-size:14px;line-height:1.85;color:var(--ink2);margin-bottom:4px"></div>
+    <div class="edit-only" style="margin-bottom:6px">
+      <div class="m-lbl">장르</div>
+      <input class="m-genre-inp" id="mGenre" placeholder="예: 드라마, 스릴러, 코미디...">
+      <div class="m-lbl">로그라인</div>
+      <textarea class="m-log" id="mLog" placeholder="작품의 핵심 내용을 한두 문장으로 입력하세요."></textarea>
+    </div>
+    <div class="edit-only">
+      <button class="m-save" onclick="saveModal()">저장</button>
+      <button class="m-export" onclick="exportHTML()">HTML 내보내기</button>
+      <span class="m-saved" id="mSaved">저장되었습니다 </span>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="page hidden" id="pg-skills">
+  <div class="det">
+    <div class="det-hero"><div><div class="det-num">04 —</div><div class="det-title">역량</div></div><div class="det-meta">Skills · Tools · AI · Film</div></div>
+    <div class="det-body">
+      <div class="sk-grid">
+        <div class="gc-b sk-card fi">
+          <div class="sk-cat">AI 제작 툴</div>
+          <div class="sk-rows">
+            <div class="sk-row"><span class="sk-name">ChatGPT</span><div class="sk-bar"><div class="sk-fill" data-w="95"></div></div><span class="sk-pct">95%</span></div>
+            <div class="sk-row"><span class="sk-name">Gemini</span><div class="sk-bar"><div class="sk-fill" data-w="93"></div></div><span class="sk-pct">93%</span></div>
+            <div class="sk-row"><span class="sk-name">Midjourney</span><div class="sk-bar"><div class="sk-fill" data-w="88"></div></div><span class="sk-pct">88%</span></div>
+            <div class="sk-row"><span class="sk-name">Runway</span><div class="sk-bar"><div class="sk-fill" data-w="90"></div></div><span class="sk-pct">90%</span></div>
+            <div class="sk-row"><span class="sk-name">VARCO AI</span><div class="sk-bar"><div class="sk-fill" data-w="91"></div></div><span class="sk-pct">91%</span></div>
+            <div class="sk-row"><span class="sk-name">Kling AI</span><div class="sk-bar"><div class="sk-fill" data-w="78"></div></div><span class="sk-pct">78%</span></div>
+          </div>
+        </div>
+        <div class="gc-b sk-card fi">
+          <div class="sk-cat">영상 제작 툴</div>
+          <div class="sk-rows">
+            <div class="sk-row"><span class="sk-name">Premiere Pro</span><div class="sk-bar"><div class="sk-fill" data-w="89"></div></div><span class="sk-pct">89%</span></div>
+            <div class="sk-row"><span class="sk-name">After Effects</span><div class="sk-bar"><div class="sk-fill" data-w="72"></div></div><span class="sk-pct">72%</span></div>
+            <div class="sk-row"><span class="sk-name">CapCut</span><div class="sk-bar"><div class="sk-fill" data-w="74"></div></div><span class="sk-pct">74%</span></div>
+          </div>
+        </div>
+        <div class="gc-b sk-card fi">
+          <div class="sk-cat">기획 · 분석</div>
+          <div class="sk-rows">
+            <div class="sk-row"><span class="sk-name">영상 기획 · PD</span><div class="sk-bar"><div class="sk-fill" data-w="92"></div></div><span class="sk-pct">92%</span></div>
+            <div class="sk-row"><span class="sk-name">레퍼런스 분석</span><div class="sk-bar"><div class="sk-fill" data-w="88"></div></div><span class="sk-pct">88%</span></div>
+            <div class="sk-row"><span class="sk-name">LXD 방법론</span><div class="sk-bar"><div class="sk-fill" data-w="80"></div></div><span class="sk-pct">80%</span></div>
+            <div class="sk-row"><span class="sk-name">마케팅 기획</span><div class="sk-bar"><div class="sk-fill" data-w="76"></div></div><span class="sk-pct">76%</span></div>
+          </div>
+        </div>
+        <div class="gc-b sk-card fi">
+          <div class="sk-cat">커뮤니케이션</div>
+          <div class="sk-rows">
+            <div class="sk-row"><span class="sk-name">피드백 수용 및 반영</span><div class="sk-bar"><div class="sk-fill" data-w="96"></div></div><span class="sk-pct">96%</span></div>
+            <div class="sk-row"><span class="sk-name">멘토링 · 교육 진행</span><div class="sk-bar"><div class="sk-fill" data-w="91"></div></div><span class="sk-pct">91%</span></div>
+            <div class="sk-row"><span class="sk-name">프로젝트 총괄</span><div class="sk-bar"><div class="sk-fill" data-w="92"></div></div><span class="sk-pct">92%</span></div>
+            <div class="sk-row"><span class="sk-name">팀 워크</span><div class="sk-bar"><div class="sk-fill" data-w="94"></div></div><span class="sk-pct">94%</span></div>
+          </div>
+        </div>
+        <div class="gc-b sk-card wide fi">
+          <div class="sk-cat">핵심 키워드</div>
+          <div class="tag-cloud">
+            <span class="tag h">KlingAI</span><span class="tag h">생성형 AI</span><span class="tag h">AI Drama</span><span class="tag h">Narrative</span>
+            <span class="tag">단편영화 PD</span><span class="tag">각본·연출</span><span class="tag">Storyboard</span><span class="tag">영상 편집</span>
+            <span class="tag">촬영</span><span class="tag">스크립터</span><span class="tag">FD</span><span class="tag">콘텐츠 기획</span>
+            <span class="tag">문화예술경영</span><span class="tag">Prompt Engineering</span><span class="tag">LXD</span><span class="tag">졸업영화제 위원장</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
+  </div>
+</div>
+
+<!-- 대외활동 -->
+<div class="page hidden" id="pg-act">
+  <div class="det">
+    <div class="det-hero"><div><div class="det-num">05 —</div><div class="det-title">대외활동</div></div><div class="det-meta">Awards · Education · Activities<br>2019–2026</div></div>
+    <div class="det-body">
+      <div class="act-tabs fi">
+        <button class="act-tab on" onclick="actTab('awards',this)"> 수상 및 선정</button>
+        <button class="act-tab" onclick="actTab('edu',this)"> 교육 수료</button>
+        <button class="act-tab" onclick="actTab('cert',this)"> 자격증</button>
+        <button class="act-tab" onclick="actTab('activities',this)"> 대외활동</button>
+      </div>
+
+      <!-- 수상 및 선정 — 최신순 -->
+      <div class="act-sec on gc" style="padding:8px 12px" id="act-awards"><div class="fi">
+        <div class="act-row"><div class="act-yr">2026</div><div><div class="act-name">졸업영화제 졸업위원장 선임</div><div class="act-org">국민대학교 졸업영화제 총괄 위원장 선임</div></div></div>
+        <div class="act-row"><div class="act-yr">2026</div><div><div class="act-name">KlingAI 앰버서더 선정</div><div class="act-org">KlingAI × MBC C&I 주관 Kling Nextgen 2026 대학창작챌린지 · 국민대학교 공식 앰버서더</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">RISE 우수사례 선정</div><div class="act-org">국민대학교 라이즈사업단 · 단편영화 〈RUN〉 각본·연출·편집</div></div></div>
+        <div class="act-row"><div class="act-yr">2022</div><div><div class="act-name">카이스트 영재기업인 네트워크 감사장</div><div class="act-org">특허청장 수여</div></div></div>
+        <div class="act-row"><div class="act-yr">2019</div><div><div class="act-name">대한민국인재상</div><div class="act-org">교육부 주관 · 청소년 역량 부문</div></div></div>
+      </div></div>
+
+      <!-- 교육 수료 — 최신순 -->
+      <div class="act-sec gc" style="padding:8px 12px" id="act-edu"><div class="fi">
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">APOC 해커톤 1기</div><div class="act-org">인터랙티브 기반 취미 추천 콘텐츠 및 AR 이미지 콘텐츠 제작</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">LXD 캠프 수료</div><div class="act-org">더 플레이 컴퍼니 · 게이미피케이션 · 학습경험디자인</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">Google AI 스킬링 프로그램 수료</div><div class="act-org">Google Korea 주관 · AI 스킬링 공식 수료</div></div></div>
+        <div class="act-row"><div class="act-yr">2022</div><div><div class="act-name">파란사다리 괌 대학교 어학연수</div><div class="act-org">2주 현지 연수</div></div></div>
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">무인동력비행장치 4종 교육 수료</div><div class="act-org">무인멀티콥터 · 드론 조종 자격 교육</div></div></div>
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">빅토리아대학교 온라인 하계 어학연수</div><div class="act-org">온라인 1개월</div></div></div>
+      </div></div>
+
+      <!-- 자격증 -->
+      <div class="act-sec gc" style="padding:8px 12px" id="act-cert"><div class="fi">
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">ITQ PowerPoint 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">ITQ Word 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
+      </div></div>
+
+      <!-- 대외활동 — 최신순 (월 기준) -->
+      <div class="act-sec gc" style="padding:8px 12px" id="act-activities"><div class="fi">
+        <div class="act-row"><div class="act-yr">2026</div><div><div class="act-name">북악스터디 46기</div><div class="act-org">국민대학교 · AI Tool 비교 분석 활동 — ChatGPT, Gemini, Midjourney, Runway, VARCO AI, KlingAI, Sora, Pika 등 주요 생성형 AI 툴 분석 · <a href="https://sunkite05-glitch.github.io/ailens/" target="_blank" style="color:var(--b400);font-weight:600">결과물 웹페이지 →</a></div></div></div>
+        <div class="act-row"><div class="act-yr">2026</div><div><div class="act-name">국민대학교 전공탐색박람회 부스 운영</div><div class="act-org">공연예술학부 영화전공 대표 학생으로 참여</div></div></div>
+        <div class="act-row"><div class="act-yr">2026</div><div><div class="act-name">AI 스터디 'promlett' 운영</div><div class="act-org">생성형 AI 실습 스터디 기획·운영 · 프롬프트 엔지니어링 및 툴 활용 중심</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">상계청소년문화의집 프로그램 기획·운영</div><div class="act-org">청소년 대상 미디어 프로그램 기획 및 현장 운영</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">팀 화이트 29기</div><div class="act-org">팀 '물방울송' 도드람한돈 브랜딩 프로젝트 활동</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">미니인턴 3건</div><div class="act-org">팜피 APOC · 테힐림 효선약차 · 아스트리아 ATTO 교육형 인턴</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">26회 전주국제영화제 봉사자 지프지기 활동</div><div class="act-org">전주국제영화제 공식 봉사 프로그램 참여</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">상계청소년센터 너나들이 미디어 기획단</div><div class="act-org">청소년 미디어 기획단 활동</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">더 플레이 컴퍼니 LXD 캠프 교육 수료 및 활동</div><div class="act-org">게이미피케이션 · 학습경험디자인 기반 교육 프로그램 참여</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">하이터치 〈세줄짜리 전시회〉 기획</div><div class="act-org">대학생 연합 동아리 · 전시 기획 참여</div></div></div>
+        <div class="act-row"><div class="act-yr">2025</div><div><div class="act-name">CJ 온라인 진로 멘토링 대학생 봉사자</div><div class="act-org">CJ 주관 온라인 진로 멘토링 프로그램 · 17조 조장으로 고등학생 대상 영상·콘텐츠 직무 멘토링 진행 및 조 운영 총괄</div></div></div>
+        <div class="act-row"><div class="act-yr">2023</div><div><div class="act-name">제트워크 시즌 10 서포터즈 매니저</div><div class="act-org">시즌 9 서포터즈 → 시즌 10 매니저로 활동</div></div></div>
+        <div class="act-row"><div class="act-yr">2022–23</div><div><div class="act-name">트루비연구소 학부연구생</div><div class="act-org">2022.05 – 2023.04 근무</div></div></div>
+        <div class="act-row"><div class="act-yr">2021–22</div><div><div class="act-name">JA KOREA 창업놀이터 앙트너</div><div class="act-org">대학생 앙트너 활동 · 2022 부트캠프 발표</div></div></div>
+        <div class="act-row"><div class="act-yr">2020–23</div><div><div class="act-name">카이스트 영재기업인 캠프 운영 조교</div><div class="act-org">하계·동계·온라인 집중 캠프 운영 · 수료생 네트워크 커리어부장 역임</div></div></div>
+      </div></div>
+    </div>
+    <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page hidden" id="pg-profile">
+  <div class="det">
+    <div class="det-hero"><div><div class="det-num">01 —</div><div class="det-title">프로필</div></div><div class="det-meta">About · Education · Contact</div></div>
+    <div class="det-body" style="padding:28px 48px">
+      <div class="pr-grid">
+        <div class="gc pr-card fi">
+          <div class="pr-row"><div class="pr-key">이름</div><div class="pr-val">송해연</div></div>
+          <div class="pr-row"><div class="pr-key">학교</div><div class="pr-val">국민대학교 공연예술학부<br>영화전공 (1전공) · 문화예술경영학융합전공 (2전공)</div></div>
+          <div class="pr-row"><div class="pr-key">졸업 예정</div><div class="pr-val">2028년 2월</div></div>
+          <div class="pr-row"><div class="pr-key">학점</div><div class="pr-val" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--b400)">4.21 <span style="font-size:13px;color:var(--ink3);font-family:'Pretendard',sans-serif;font-weight:400">/4.5</span></div></div>
+          <div class="pr-row"><div class="pr-key">이메일</div><div class="pr-val"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div></div>
+          <div class="pr-row"><div class="pr-key">포트폴리오</div><div class="pr-val"><a href="https://sunkite05-glitch.github.io/ailens/" target="_blank">북악스터디 AI 프로젝트 →</a></div></div>
+        </div>
+        <div class="gc st-card fi">
+          <div>
+            <div class="st-q">영상으로 이야기하고,<br>AI로 가능성을 확장합니다</div>
+            <p class="st-body">국민대학교에서 영화와 문화예술경영을 복수전공하며 콘텐츠 제작의 이론과 실무 양면을 갖춰왔습니다. 영상 제작 20편 이상의 현장에서 PD, 연출, 스크립터, 촬영, 제작부 등 다양한 역할을 수행하며 기획부터 후반 작업까지 전 과정을 경험했습니다.<br><br>KlingAI 공식 앰버서더로서 생성형 AI 기반 영상 제작 역량을 검증받았으며, Midjourney, Runway, VARCO AI 등 다양한 AI 툴을 활용한 콘텐츠 제작에도 익숙합니다. 영상 제작뿐 아니라 콘텐츠 기획, 마케팅 전략 수립, 브랜드 커뮤니케이션 등 폭넓은 분야에서 기여할 수 있으며, 실무자의 피드백을 빠르게 흡수하고 결과물에 반영하는 자세를 갖추고 있습니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="edu-grid">
+        <div class="gc-b edu-card main fi"><div class="edu-sch">국민대학교</div><div class="edu-d">공연예술학부 영화전공 · 문화예술경영학융합전공</div><div class="edu-p">2024.03 — 2028.02 졸업 예정</div><div class="edu-gpa">4.21</div></div>
+        <div class="gc-b edu-card fi"><div class="edu-sch">강원대학교</div><div class="edu-d">생약자원개발학과</div><div class="edu-p">2021 — 2023 · 중퇴</div><div class="edu-gpa" style="font-size:22px">3.18</div></div>
+        <div class="gc-b edu-card fi" style="display:flex;align-items:center;justify-content:center;background:rgba(200,232,255,.35);grid-column:span 2">
+          <div style="text-align:center"><div style="font-size:10.5px;font-weight:700;color:var(--b600);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">해외 어학연수</div><div style="font-size:13px;color:var(--ink2);line-height:2">빅토리아대학교 온라인 (2021) &nbsp;·&nbsp; 괌 대학교 파란사다리 (2022)</div></div>
+        </div>
+      </div>
+    </div>
+    <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.addEventListener('mouseover',function(e){
+  if(e.target.closest('a,button,.menu-card,.film-row,.act-row,.ai-card,.sk-card')){cur.style.transform='translate(-50%,-50%) scale(2.2)';curR.style.transform='translate(-50%,-50%) scale(1.6)'}
+  else{cur.style.transform='translate(-50%,-50%) scale(1)';curR.style.transform='translate(-50%,-50%) scale(1)'}
+});
+const EDIT_PW = 'hope';
+let editMode = false;
+let _pending = null;
+let _lc = 0, _lt = null;
+
+document.getElementById('logo').addEventListener('click',function(){
+  _lc++;clearTimeout(_lt);_lt=setTimeout(function(){_lc=0},1500);
+  if(_lc>=5){_lc=0;if(!editMode)document.getElementById('pwBg').classList.add('open')}
+  else if(cp!=='home'){goHome()}
+});
+document.getElementById('pwInp').addEventListener('keydown',function(e){
+  if(e.key==='Enter')checkPw();
+  if(e.key==='Escape')document.getElementById('pwBg').classList.remove('open');
+});
+
+function checkPw(){
+  var v=document.getElementById('pwInp').value;
+  if(v===EDIT_PW){
+    editMode=true;document.body.classList.add('edit-mode');
+    document.getElementById('pwBg').classList.remove('open');
+    document.getElementById('pwInp').value='';document.getElementById('pwErr').textContent='';
+    if(_pending){openModal.apply(null,_pending);_pending=null}
+  } else {
+    document.getElementById('pwErr').textContent='비밀번호가 맞지 않아요';
+    document.getElementById('pwInp').value='';
+    setTimeout(function(){document.getElementById('pwErr').textContent=''},2000);
+  }
+}
+
+let cp='home';
+var _hist=['home'];
+function go(id){
+  if(cp===id)return;
+  var f=document.getElementById('pg-'+cp),t=document.getElementById('pg-'+id);
+  if(!t)return;
+  f.classList.remove('active');f.classList.add('out');
+  t.classList.remove('hidden');t.classList.add('active');t.scrollTop=0;
+  setTimeout(function(){f.classList.remove('out');f.classList.add('hidden')},580);
+  _hist.push(id);
+  cp=id;
+  updateBackBtn();
+  setTimeout(function(){fadein(t)},80);
+  if(id==='skills')setTimeout(function(){bars(t)},260);
+}
+function goBack(){
+  if(_hist.length<=1)return;
+  _hist.pop();
+  var prev=_hist[_hist.length-1];
+  var f=document.getElementById('pg-'+cp),t=document.getElementById('pg-'+prev);
+  if(!t)return;
+  f.classList.remove('active');f.classList.add('out');
+  t.classList.remove('hidden');t.classList.add('active');t.scrollTop=0;
+  setTimeout(function(){f.classList.remove('out');f.classList.add('hidden')},580);
+  cp=prev;
+  updateBackBtn();
+  setTimeout(function(){fadein(t)},80);
+  if(prev==='skills')setTimeout(function(){bars(t)},260);
+}
+function updateBackBtn(){
+  var btn=document.getElementById('backBtn');
+  btn.classList.toggle('on',_hist.length>1);
+}
+function goHome(){
+  _hist=['home'];
+  var f=document.getElementById('pg-'+cp),t=document.getElementById('pg-home');
+  if(cp==='home')return;
+  f.classList.remove('active');f.classList.add('out');
+  t.classList.remove('hidden');t.classList.add('active');t.scrollTop=0;
+  setTimeout(function(){f.classList.remove('out');f.classList.add('hidden')},580);
+  cp='home';
+  updateBackBtn();
+}
+function fadein(c){c.querySelectorAll('.fi:not(.v)').forEach(function(el,i){setTimeout(function(){el.classList.add('v')},i*65)})}
+function bars(c){c.querySelectorAll('.sk-fill').forEach(function(b,i){var w=b.dataset.w||0;b.style.width='0%';setTimeout(function(){b.style.width=w+'%'},i*50)})}
+setTimeout(function(){fadein(document.getElementById('pg-home'))},150);
+
+function filt(type,btn){
+  document.querySelectorAll('.f-btn').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  document.querySelectorAll('.film-row').forEach(function(r){r.classList.toggle('gone',type!=='all'&&r.dataset.t!==type)});
+}
+
+function actTab(id,btn){
+  document.querySelectorAll('.act-tab').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.act-sec').forEach(function(s){s.classList.remove('on')});
+  btn.classList.add('on');document.getElementById('act-'+id).classList.add('on');
+}
+
+var SKEY='portfolio_film_data';
+function loadData(){try{return JSON.parse(localStorage.getItem(SKEY)||'{}')}catch(e){return{}}}
+function saveData(d){localStorage.setItem(SKEY,JSON.stringify(d))}
+
+var curId='';
+function openModal(title,role,type,id){
+  var data=loadData()[id]||{};
+  var has=data.genre||data.logoline||data.img;
+  if(!editMode&&!has)return;
+  curId=id;
+  document.getElementById('mTitle').textContent=title;
+  document.getElementById('mRole').textContent=role.toUpperCase();
+  if(editMode){
+    document.getElementById('mGenre').value=data.genre||'';
+    document.getElementById('mLog').value=data.logoline||'';
+  }
+  var gv=document.getElementById('mGenreView'),lv=document.getElementById('mLogView');
+  if(data.genre){gv.innerHTML='<span style="display:inline-block;background:rgba(30,150,232,.1);border:1px solid rgba(30,150,232,.25);border-radius:14px;padding:4px 12px;font-size:11.5px;font-weight:600;color:var(--b500);margin-bottom:12px">'+data.genre+'</span>'}else{gv.innerHTML=''}
+  lv.textContent=data.logoline||'';
+  var img=document.getElementById('mImg'),ph=document.getElementById('mPh');
+  if(data.img){img.src=data.img;img.style.display='block';ph.style.display='none'}
+  else{img.style.display='none';ph.style.display=editMode?'flex':'none'}
+  var still=document.getElementById('mStill');
+  still.style.display=(data.img||editMode)?'block':'none';
+  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('mSaved').classList.remove('show');
+}
+function bgClose(e){if(e.target===document.getElementById('modalBg'))closeModal()}
+function closeModal(){document.getElementById('modalBg').classList.remove('open')}
+
+function handleImg(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){var img=document.getElementById('mImg');img.src=ev.target.result;img.style.display='block';document.getElementById('mPh').style.display='none'};
+  reader.readAsDataURL(file);
+}
+
+function saveModal(){
+  var data=loadData();
+  var img=document.getElementById('mImg');
+  data[curId]={genre:document.getElementById('mGenre').value,logoline:document.getElementById('mLog').value,img:(img.style.display!=='none'&&img.src&&img.src!==location.href)?img.src:''};
+  saveData(data);
+  var msg=document.getElementById('mSaved');msg.textContent='저장되었습니다 ';msg.classList.add('show');
+  setTimeout(function(){msg.classList.remove('show')},2500);
+}
+
+function exportHTML(){
+  var data=loadData();
+  var dj=JSON.stringify(data).replace(/</g,'\u003c').replace(/>/g,'\u003e');
+  var src=document.documentElement.outerHTML;
+  var S='/*__FS__*/';var E='/*__FE__*/';
+  var si=src.indexOf(S);var ei=src.indexOf(E);
+  if(si!==-1&&ei!==-1)src=src.slice(0,si)+src.slice(ei+E.length);
+  var inj=S+'var __IFD__='+dj+';(function(){try{var s=localStorage.getItem("portfolio_film_data");if(!s||Object.keys(JSON.parse(s)).length===0)localStorage.setItem("portfolio_film_data",JSON.stringify(__IFD__));}catch(e){}})();'+E;
+  src=src.replace('var EDIT_PW',inj+'\nvar EDIT_PW');
+  var blob=new Blob([src],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='portfolio_songhayeon.html';a.click();URL.revokeObjectURL(a.href);
+  var msg=document.getElementById('mSaved');msg.textContent='다운로드 완료 ';msg.classList.add('show');
+  setTimeout(function(){msg.textContent='저장되었습니다 ';msg.classList.remove('show')},3000);
+}
+
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('v')})},{threshold:.08});
+document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
+</script>
+</body>
+</html>
