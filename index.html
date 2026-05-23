@@ -140,7 +140,7 @@ nav a:hover{color:var(--b400)}
 .f-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .f-btn{font-size:11.5px;font-weight:500;padding:8px 18px;border-radius:20px;border:1px solid var(--line2);color:var(--ink3);background:rgba(255,255,255,.7);transition:all .2s}
 .f-btn.on,.f-btn:hover{background:var(--b400);border-color:var(--b400);color:#fff}
-.film-row{display:grid;grid-template-columns:64px 1fr 110px 100px 90px;align-items:center;gap:18px;padding:16px;border-radius:12px;transition:background .2s;cursor:none}
+
 .film-row:hover{background:rgba(255,255,255,.65)}
 .film-row+.film-row{border-top:1px solid var(--line)}
 .film-row.gone{display:none}
@@ -315,10 +315,15 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
   .ai-card{padding:20px 18px}
 
   /* 필모그래피 */
-  .film-row{grid-template-columns:52px 1fr 80px;gap:10px;padding:14px 10px}
-  .film-row > div:nth-child(4),.film-row > div:nth-child(5){display:none}
+  .film-row > div:nth-child(4),
   .ft{font-size:13px}
-  .film-row[data-has="1"] .film-detail{display:inline-block !important;font-size:9px;padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle}
+
+  /* 필모그래피 모바일 */
+  .film-row{grid-template-columns:52px 1fr 80px !important}
+  
+  
+  .film-row[data-has="1"] .fn::after{content:"상세보기";margin-left:7px;font-size:9.5px;font-weight:600;color:var(--b500);background:rgba(255,255,255,.9);border:1px solid rgba(30,150,232,.25);border-radius:8px;padding:2px 8px;vertical-align:middle;display:inline}
+
 
   .fn{font-size:11px}
   .r-tag{font-size:9px;padding:4px 8px}
@@ -378,18 +383,36 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
 .yt-link::before{content:'▶';font-size:9px;}
 .yt-link:hover{background:rgba(30,150,232,.2);}
 
-.film-row .film-detail{display:none}
-.film-row[data-has="1"] .film-detail{
-  display:inline-block;
-  font-size:10px;font-weight:600;
-  letter-spacing:.06em;
-  color:var(--b500);
-  background:rgba(255,255,255,.9);
-  border:1px solid rgba(30,150,232,.25);
-  border-radius:10px;
-  padding:4px 10px;
-  white-space:nowrap;
+
+/* 필모그래피 */
+.film-row{display:grid;grid-template-columns:64px 1fr 110px 1fr;align-items:center;gap:18px;padding:16px;border-radius:12px;transition:background .2s;cursor:none}
+
+.film-detail{display:none;font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--b500);background:rgba(255,255,255,.9);border:1px solid rgba(30,150,232,.25);border-radius:10px;padding:4px 10px;white-space:nowrap}
+.film-row[data-has="1"] .film-detail{display:inline-block}
+
+.film-last{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.b-rise{font-size:9.5px;font-weight:600;padding:4px 10px;border-radius:8px;background:rgba(30,150,232,.1);color:var(--b500);border:1px solid rgba(30,150,232,.25);letter-spacing:.08em;white-space:nowrap}
+.b-plan{font-size:9.5px;font-weight:500;padding:4px 10px;border-radius:8px;background:rgba(200,220,240,.25);color:var(--ink3);border:1px solid var(--line);white-space:nowrap}
+
+.act-add-btn{
+  display:none;
+  background:var(--b400);
+  border:none;
+  border-radius:20px;
+  padding:9px 22px;
+  font-size:12px;
+  font-weight:600;
+  color:#fff;
+  font-family:'Pretendard',sans-serif;
+  cursor:none;
+  transition:all .25s;
+  letter-spacing:.04em;
+  gap:6px;
+  align-items:center;
+  box-shadow:0 2px 12px rgba(30,150,232,.2);
 }
+.act-add-btn:hover{background:var(--b500);transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,150,232,.3);}
+body.edit-mode .act-add-btn{display:inline-flex;}
 </style>
 </head>
 <body>
@@ -557,28 +580,28 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
         <button class="f-btn" onclick="filt('ad',this)">광고·홍보</button>
       </div>
       <div class="gc fi" style="padding:8px 12px">
-        <div class="film-row" data-id="alien" data-t="director" onclick="openModal('엄마는 외계인','연출 감독 · 8월 촬영 예정','director','alien')"><div class="fy">2026</div><div><div class="ft">엄마는 외계인</div><div class="fn">연출 감독 · 8월 촬영 예정<span class="film-detail"></span></div></div><div class="r-tag r-dir">Director</div><div class="b-plan">예정작</div><div></div></div>
-        <div class="film-row" data-id="cookme" data-t="crew" onclick="openModal('COOK ME!','제작부','crew','cookme')"><div class="fy">2026</div><div><div class="ft">COOK ME!</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="run" data-t="director" onclick="openModal('RUN','각본 · 연출 · 편집','director','run')"><div class="fy">2025</div><div><div class="ft">RUN</div><div class="fn">각본 · 연출 · 편집<span class="film-detail"></span></div></div><div class="r-tag r-dir">Director</div><div class="b-rise">RISE 우수사례</div><div></div></div>
-        <div class="film-row" data-id="heeae" data-t="pd" onclick="openModal('희애는 사라지지 않는다','PD','pd','heeae')"><div class="fy">2025</div><div><div class="ft">희애는 사라지지 않는다</div><div class="fn">PD<span class="film-detail"></span></div></div><div class="r-tag r-pd">PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="lih" data-t="pd" onclick="openModal('Let It Happen','PD','pd','lih')"><div class="fy">2025</div><div><div class="ft">Let It Happen</div><div class="fn">PD<span class="film-detail"></span></div></div><div class="r-tag r-pd">PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="min3" data-t="pd" onclick="openModal('3분짜리 인생','PD','pd','min3')"><div class="fy">2025</div><div><div class="ft">3분짜리 인생</div><div class="fn">PD<span class="film-detail"></span></div></div><div class="r-tag r-pd">PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="muhan" data-t="crew" onclick="openModal('無한','제작부','crew','muhan')"><div class="fy">2025</div><div><div class="ft">無한</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="igagi" data-t="crew" onclick="openModal('이갈이','제작부','crew','igagi')"><div class="fy">2025</div><div><div class="ft">이갈이</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="bles" data-t="crew" onclick="openModal('BLE SEIREN','제작부','crew','bles')"><div class="fy">2025</div><div><div class="ft">BLE SEIREN</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="fino" data-t="ad" onclick="openModal('FINO 광고','FD','ad','fino')"><div class="fy">2025</div><div><div class="ft">FINO 광고</div><div class="fn">FD<span class="film-detail"></span></div></div><div class="r-tag r-ad">FD</div><div></div><div></div></div>
-        <div class="film-row" data-id="sangye" data-t="ad" onclick="openModal('상계청소년문화의집 홍보영상','촬영 · 편집','ad','sangye')"><div class="fy">2025</div><div><div class="ft">상계청소년문화의집 홍보영상</div><div class="fn">촬영 · 편집<span class="film-detail"></span></div></div><div class="r-tag r-ad">홍보영상</div><div></div><div></div></div>
-        <div class="film-row" data-id="eojj" data-t="pd" onclick="openModal('어쩌다 당신에게도','PD','pd','eojj')"><div class="fy">2024</div><div><div class="ft">어쩌다 당신에게도</div><div class="fn">PD<span class="film-detail"></span></div></div><div class="r-tag r-pd">PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="gosang" data-t="pd" onclick="openModal('고상하','라인 PD','pd','gosang')"><div class="fy">2024</div><div><div class="ft">고상하</div><div class="fn">라인 PD<span class="film-detail"></span></div></div><div class="r-tag r-pd">Line PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="etiq" data-t="pd" onclick="openModal('국민대 졸업영화제 에티켓 영상','PD · 조연출','pd','etiq')"><div class="fy">2024</div><div><div class="ft">국민대 졸업영화제 에티켓 영상</div><div class="fn">PD · 조연출<span class="film-detail"></span></div></div><div class="r-tag r-pd">PD</div><div></div><div></div></div>
-        <div class="film-row" data-id="zombie" data-t="crew" onclick="openModal('좀비의 꿈','연출부','crew','zombie')"><div class="fy">2024</div><div><div class="ft">좀비의 꿈</div><div class="fn">연출부<span class="film-detail"></span></div></div><div class="r-tag r-crew">연출부</div><div></div><div></div></div>
-        <div class="film-row" data-id="kkaebat" data-t="crew" onclick="openModal('깨밭의 도깨비','촬영부','crew','kkaebat')"><div class="fy">2024</div><div><div class="ft">깨밭의 도깨비</div><div class="fn">촬영부<span class="film-detail"></span></div></div><div class="r-tag r-crew">촬영부</div><div></div><div></div></div>
-        <div class="film-row" data-id="ournight" data-t="crew" onclick="openModal('우리의 밤','연출부','crew','ournight')"><div class="fy">2024</div><div><div class="ft">우리의 밤</div><div class="fn">연출부<span class="film-detail"></span></div></div><div class="r-tag r-crew">연출부</div><div></div><div></div></div>
-        <div class="film-row" data-id="wet" data-t="crew" onclick="openModal('WET DREAM','제작부','crew','wet')"><div class="fy">2024</div><div><div class="ft">WET DREAM</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="road" data-t="crew" onclick="openModal('로드 투 천국','제작부','crew','road')"><div class="fy">2024</div><div><div class="ft">로드 투 천국</div><div class="fn">제작부<span class="film-detail"></span></div></div><div class="r-tag r-crew">제작부</div><div></div><div></div></div>
-        <div class="film-row" data-id="floor" data-t="crew" onclick="openModal('층간소음','스크립터','crew','floor')"><div class="fy">2024</div><div><div class="ft">층간소음</div><div class="fn">스크립터<span class="film-detail"></span></div></div><div class="r-tag r-crew">스크립터</div><div></div><div></div></div>
-        <div class="film-row" data-id="mbn" data-t="ad" onclick="openModal('MBN FITNESS 삼송점 광고','엘리베이터 영상 광고 제작','ad','mbn')"><div class="fy">2024</div><div><div class="ft">MBN FITNESS 삼송점 광고</div><div class="fn">엘리베이터 영상 광고 제작<span class="film-detail"></span></div></div><div class="r-tag r-ad">광고</div><div></div><div></div></div>
-        <div class="film-row" data-id="leoj" data-t="ad" onclick="openModal('레오제이 화보 촬영 현장','FD','ad','leoj')"><div class="fy">2024</div><div><div class="ft">레오제이 화보 촬영 현장</div><div class="fn">FD<span class="film-detail"></span></div></div><div class="r-tag r-ad">FD</div><div></div><div></div></div>
+        <div class="film-row" data-id="alien" data-t="director" onclick="openModal('엄마는 외계인','연출 감독 · 8월 촬영 예정','director','alien')"><div class="fy">2026</div><div><div class="ft">엄마는 외계인</div><div class="fn">연출 감독 · 8월 촬영 예정</div></div><div class="r-tag r-dir">Director</div><div class="film-last"><span class="b-plan">예정작</span><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="cookme" data-t="crew" onclick="openModal('COOK ME!','제작부','crew','cookme')"><div class="fy">2026</div><div><div class="ft">COOK ME!</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="run" data-t="director" onclick="openModal('RUN','각본 · 연출 · 편집','director','run')"><div class="fy">2025</div><div><div class="ft">RUN</div><div class="fn">각본 · 연출 · 편집</div></div><div class="r-tag r-dir">Director</div><div class="film-last"><span class="b-rise">RISE 우수사례</span><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="heeae" data-t="pd" onclick="openModal('희애는 사라지지 않는다','PD','pd','heeae')"><div class="fy">2025</div><div><div class="ft">희애는 사라지지 않는다</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="lih" data-t="pd" onclick="openModal('Let It Happen','PD','pd','lih')"><div class="fy">2025</div><div><div class="ft">Let It Happen</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="min3" data-t="pd" onclick="openModal('3분짜리 인생','PD','pd','min3')"><div class="fy">2025</div><div><div class="ft">3분짜리 인생</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="muhan" data-t="crew" onclick="openModal('無한','제작부','crew','muhan')"><div class="fy">2025</div><div><div class="ft">無한</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="igagi" data-t="crew" onclick="openModal('이갈이','제작부','crew','igagi')"><div class="fy">2025</div><div><div class="ft">이갈이</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="bles" data-t="crew" onclick="openModal('BLE SEIREN','제작부','crew','bles')"><div class="fy">2025</div><div><div class="ft">BLE SEIREN</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="fino" data-t="ad" onclick="openModal('FINO 광고','FD','ad','fino')"><div class="fy">2025</div><div><div class="ft">FINO 광고</div><div class="fn">FD</div></div><div class="r-tag r-ad">FD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="sangye" data-t="ad" onclick="openModal('상계청소년문화의집 홍보영상','촬영 · 편집','ad','sangye')"><div class="fy">2025</div><div><div class="ft">상계청소년문화의집 홍보영상</div><div class="fn">촬영 · 편집</div></div><div class="r-tag r-ad">홍보영상</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="eojj" data-t="pd" onclick="openModal('어쩌다 당신에게도','PD','pd','eojj')"><div class="fy">2024</div><div><div class="ft">어쩌다 당신에게도</div><div class="fn">PD</div></div><div class="r-tag r-pd">PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="gosang" data-t="pd" onclick="openModal('고상하','라인 PD','pd','gosang')"><div class="fy">2024</div><div><div class="ft">고상하</div><div class="fn">라인 PD</div></div><div class="r-tag r-pd">Line PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="etiq" data-t="pd" onclick="openModal('국민대 졸업영화제 에티켓 영상','PD · 조연출','pd','etiq')"><div class="fy">2024</div><div><div class="ft">국민대 졸업영화제 에티켓 영상</div><div class="fn">PD · 조연출</div></div><div class="r-tag r-pd">PD</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="zombie" data-t="crew" onclick="openModal('좀비의 꿈','연출부','crew','zombie')"><div class="fy">2024</div><div><div class="ft">좀비의 꿈</div><div class="fn">연출부</div></div><div class="r-tag r-crew">연출부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="kkaebat" data-t="crew" onclick="openModal('깨밭의 도깨비','촬영부','crew','kkaebat')"><div class="fy">2024</div><div><div class="ft">깨밭의 도깨비</div><div class="fn">촬영부</div></div><div class="r-tag r-crew">촬영부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="ournight" data-t="crew" onclick="openModal('우리의 밤','연출부','crew','ournight')"><div class="fy">2024</div><div><div class="ft">우리의 밤</div><div class="fn">연출부</div></div><div class="r-tag r-crew">연출부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="wet" data-t="crew" onclick="openModal('WET DREAM','제작부','crew','wet')"><div class="fy">2024</div><div><div class="ft">WET DREAM</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="road" data-t="crew" onclick="openModal('로드 투 천국','제작부','crew','road')"><div class="fy">2024</div><div><div class="ft">로드 투 천국</div><div class="fn">제작부</div></div><div class="r-tag r-crew">제작부</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="floor" data-t="crew" onclick="openModal('층간소음','스크립터','crew','floor')"><div class="fy">2024</div><div><div class="ft">층간소음</div><div class="fn">스크립터</div></div><div class="r-tag r-crew">스크립터</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="mbn" data-t="ad" onclick="openModal('MBN FITNESS 삼송점 광고','엘리베이터 영상 광고 제작','ad','mbn')"><div class="fy">2024</div><div><div class="ft">MBN FITNESS 삼송점 광고</div><div class="fn">엘리베이터 영상 광고 제작</div></div><div class="r-tag r-ad">광고</div><div class="film-last"><span class="film-detail"></span></div></div>
+        <div class="film-row" data-id="leoj" data-t="ad" onclick="openModal('레오제이 화보 촬영 현장','FD','ad','leoj')"><div class="fy">2024</div><div><div class="ft">레오제이 화보 촬영 현장</div><div class="fn">FD</div></div><div class="r-tag r-ad">FD</div><div class="film-last"><span class="film-detail"></span></div></div>
       </div>
     </div>
     <footer><div class="f-name">송해연</div><div class="f-info"><a href="mailto:sunkite05@gmail.com">sunkite05@gmail.com</a></div><div class="f-back" onclick="goBack()">← 이전</div></footer>
@@ -750,13 +773,16 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
 <!-- 대외활동 -->
 <div class="page hidden" id="pg-act">
   <div class="det">
-    <div class="det-hero"><div><div class="det-num">05 —</div><div class="det-title">대외활동</div></div><div class="det-meta">Awards · Education · Activities<br>2019–2026</div></div>
+    <div class="det-hero"><div><div class="det-num">05 —</div><div class="det-title">대외활동</div></div><div class="det-meta" id="actMeta">Awards · Education · Activities<br><span id="actYearRange">2019–2026</span></div></div>
     <div class="det-body">
       <div class="act-tabs fi">
         <button class="act-tab on" onclick="actTab('awards',this)"> 수상 및 선정</button>
         <button class="act-tab" onclick="actTab('edu',this)"> 교육 수료</button>
         <button class="act-tab" onclick="actTab('cert',this)"> 자격증</button>
         <button class="act-tab" onclick="actTab('activities',this)"> 대외활동</button>
+      </div>
+      <div style="margin-bottom:16px">
+        <button class="act-add-btn" id="actAddBtn" onclick="openActModal()"><span style="font-size:18px;font-weight:300;line-height:1">+</span> 항목 추가</button>
       </div>
 
       <!-- 수상 및 선정 — 최신순 -->
@@ -957,6 +983,21 @@ function actTab(id,btn){
   document.querySelectorAll('.act-sec').forEach(function(s){s.classList.remove('on')});
   btn.classList.add('on');document.getElementById('act-'+id).classList.add('on');
 }
+function updateActYearRange(){
+  var yr=document.getElementById('actYearRange');
+  if(!yr)return;
+  var all=document.querySelectorAll('.act-yr');
+  var years=[];
+  all.forEach(function(el){
+    var y=parseInt(el.textContent);
+    if(y>2000)years.push(y);
+  });
+  if(!years.length)return;
+  var mn=Math.min.apply(null,years);
+  var mx=Math.max.apply(null,years);
+  yr.textContent=mn+'–'+mx;
+}
+setTimeout(function(){updateActYearRange();},500);
 
 var SKEY = 'portfolio_film_data';
 var ACT_KEY = 'portfolio_act_data';
@@ -1017,22 +1058,16 @@ function openModal(title,role,type,id){
 function bgClose(e){if(e.target===document.getElementById('modalBg'))closeModal()}
 
 function updateFilmDots(){
-  // 모든 저장소에서 데이터 합치기
   var data = {};
-  try { var ls = JSON.parse(localStorage.getItem('portfolio_film_data')||'{}'); data = ls; } catch(e){}
-  if(window._filmCache && Object.keys(window._filmCache).length > 0) data = window._filmCache;
-
+  try{ var ls=JSON.parse(localStorage.getItem('portfolio_film_data')||'{}'); if(Object.keys(ls).length) data=ls; }catch(e){}
+  if(window._filmCache && Object.keys(window._filmCache).length) data=window._filmCache;
   document.querySelectorAll('.film-row[data-id]').forEach(function(row){
-    var filmId = row.dataset.id;
-    var d = data[filmId];
+    var d = data[row.dataset.id];
+    var has = d && (d.genre||d.logoline||d.img||d.ytUrl);
+    if(has){ row.setAttribute('data-has','1'); }
+    else { row.removeAttribute('data-has'); }
     var badge = row.querySelector('.film-detail');
-    if(d && (d.genre || d.logoline || d.img || d.ytUrl)){
-      row.setAttribute('data-has','1');
-      if(badge) badge.textContent = '상세보기';
-    } else {
-      row.removeAttribute('data-has');
-      if(badge) badge.textContent = '';
-    }
+    if(badge) badge.textContent = has ? '상세보기' : '';
   });
 }
 setTimeout(function(){updateFilmDots();},300);
