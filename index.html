@@ -42,7 +42,7 @@ nav a:hover{color:var(--b400)}
 .page.hidden{transform:translateY(48px);opacity:0;pointer-events:none}
 .page.out{transform:translateY(-32px);opacity:0;pointer-events:none}
 .page.active{transform:translateY(0);opacity:1;pointer-events:auto}
-.gc{background:var(--glass);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:20px;box-shadow:0 2px 32px rgba(30,120,200,.07),0 0 0 1px rgba(30,150,232,.07)}
+.gc{background:var(--glass);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:20px;box-shadow:0 2px 32px rgba(30,120,200,.07),0 0 0 1px rgba(30,150,232,.07);overflow:hidden}
 .gc-b{background:var(--glass-b);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 1px 16px rgba(30,120,200,.05)}
 
 /* HERO */
@@ -295,6 +295,9 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
   /* 메뉴 */
   .menu-wrap{padding:28px 20px 56px}
   .menu-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .menu-grid .menu-card[style*="grid-column:span 4"]{grid-column:span 2 !important;display:flex !important}
+  .mc-title{font-size:14px;word-break:keep-all}
+  .mc-sub{font-size:11px;word-break:keep-all}
   .mc-title{font-size:16px}
   .mc-sub{font-size:11px}
 
@@ -319,10 +322,10 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
   .ft{font-size:13px}
 
   /* 필모그래피 모바일 */
+  .film-last{display:none !important}
   .film-row{grid-template-columns:52px 1fr 80px !important}
   
   
-  .film-row[data-has="1"] .fn::after{content:"상세보기";margin-left:7px;font-size:9.5px;font-weight:600;color:var(--b500);background:rgba(255,255,255,.9);border:1px solid rgba(30,150,232,.25);border-radius:8px;padding:2px 8px;vertical-align:middle;display:inline}
 
 
   .fn{font-size:11px}
@@ -385,12 +388,10 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
 
 
 /* 필모그래피 */
-.film-row{display:grid;grid-template-columns:64px 1fr 110px 1fr;align-items:center;gap:18px;padding:16px;border-radius:12px;transition:background .2s;cursor:none}
+.film-row{display:grid;grid-template-columns:64px 1fr 110px;align-items:center;gap:18px;padding:16px;border-radius:12px;transition:background .2s;cursor:none;overflow:hidden}
 
-.film-detail{display:none;font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--b500);background:rgba(255,255,255,.9);border:1px solid rgba(30,150,232,.25);border-radius:10px;padding:4px 10px;white-space:nowrap}
-.film-row[data-has="1"] .film-detail{display:inline-block}
 
-.film-last{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.film-last{display:none}
 .b-rise{font-size:9.5px;font-weight:600;padding:4px 10px;border-radius:8px;background:rgba(30,150,232,.1);color:var(--b500);border:1px solid rgba(30,150,232,.25);letter-spacing:.08em;white-space:nowrap}
 .b-plan{font-size:9.5px;font-weight:500;padding:4px 10px;border-radius:8px;background:rgba(200,220,240,.25);color:var(--ink3);border:1px solid var(--line);white-space:nowrap}
 
@@ -413,6 +414,26 @@ footer{padding:28px 56px;border-top:1px solid var(--line);display:flex;justify-c
 }
 .act-add-btn:hover{background:var(--b500);transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,150,232,.3);}
 body.edit-mode .act-add-btn{display:inline-flex;}
+
+
+/* 상세보기 — ft 옆에 하나만 */
+.film-detail{display:none}
+.film-last{display:none !important}
+.film-row[data-has="1"] .ft::after{
+  content:"상세보기";
+  display:inline-block;
+  margin-left:8px;
+  font-size:10px;
+  font-weight:600;
+  color:var(--b500);
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(30,150,232,.25);
+  border-radius:10px;
+  padding:3px 10px;
+  vertical-align:middle;
+  letter-spacing:.04em;
+  font-family:'Pretendard',sans-serif;
+}
 </style>
 </head>
 <body>
@@ -570,14 +591,15 @@ body.edit-mode .act-add-btn{display:inline-flex;}
 <!-- FILM -->
 <div class="page hidden" id="pg-film">
   <div class="det">
-    <div class="det-hero"><div><div class="det-num">03 —</div><div class="det-title">필모그래피</div></div><div class="det-meta">20+ · 2024–2026<br>클릭하면 상세 정보 확인</div></div>
+    <div class="det-hero"><div><div class="det-num">03 —</div><div class="det-title">필모그래피</div></div><div class="det-meta">20+ · <span id="filmYearRange">2024–2026</span><br>클릭하면 상세 정보 확인</div></div>
     <div class="det-body">
-      <div class="f-filters fi">
+      <div class="f-filters fi" style="flex-wrap:wrap">
         <button class="f-btn on" onclick="filt('all',this)">전체</button>
         <button class="f-btn" onclick="filt('director',this)">연출</button>
         <button class="f-btn" onclick="filt('pd',this)">PD</button>
         <button class="f-btn" onclick="filt('crew',this)">제작·스태프</button>
         <button class="f-btn" onclick="filt('ad',this)">광고·홍보</button>
+        <button class="act-add-btn edit-only" style="margin-left:auto" onclick="openFilmAddModal()"><span style="font-size:18px;font-weight:300;line-height:1">+</span> 작품 추가</button>
       </div>
       <div class="gc fi" style="padding:8px 12px">
         <div class="film-row" data-id="alien" data-t="director" onclick="openModal('엄마는 외계인','연출 감독 · 8월 촬영 예정','director','alien')"><div class="fy">2026</div><div><div class="ft">엄마는 외계인</div><div class="fn">연출 감독 · 8월 촬영 예정</div></div><div class="r-tag r-dir">Director</div><div class="film-last"><span class="b-plan">예정작</span><span class="film-detail"></span></div></div>
@@ -644,6 +666,40 @@ body.edit-mode .act-add-btn{display:inline-flex;}
 </div>
 
 <!-- 필름 모달 -->
+<!-- 필름 추가 모달 -->
+<div class="act-modal-bg" id="filmAddModalBg" onclick="if(event.target===this)closeFilmAddModal()">
+  <div class="act-modal">
+    <button class="modal-close" onclick="closeFilmAddModal()">✕</button>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:20px">작품 추가</div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">연도</div>
+      <input class="m-genre-inp" id="fYear" placeholder="예: 2026" style="width:100%">
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">제목</div>
+      <input class="m-genre-inp" id="fTitle" placeholder="예: 나의 단편영화" style="width:100%">
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">역할</div>
+      <input class="m-genre-inp" id="fRole" placeholder="예: PD, 연출, 제작부..." style="width:100%">
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="m-lbl">분류</div>
+      <select id="fType" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,.6);color:var(--ink);font-family:'Pretendard',sans-serif;font-size:13px;">
+        <option value="director">연출</option>
+        <option value="pd" selected>PD</option>
+        <option value="crew">제작·스태프</option>
+        <option value="ad">광고·홍보</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px">
+      <button class="m-save" onclick="saveFilmAdd()">추가</button>
+      <button class="m-save" style="background:var(--ink3)" onclick="closeFilmAddModal()">취소</button>
+      <span class="m-saved" id="filmAddSaved" style="opacity:0">추가되었습니다 ✓</span>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modalBg" onclick="bgClose(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -806,8 +862,8 @@ body.edit-mode .act-add-btn{display:inline-flex;}
 
       <!-- 자격증 -->
       <div class="act-sec gc" style="padding:8px 12px" id="act-cert"><div class="fi">
-        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">ITQ PowerPoint 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
-        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">ITQ Word 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">MOS PowerPoint 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
+        <div class="act-row"><div class="act-yr">2021</div><div><div class="act-name">MOS Word 자격증</div><div class="act-org">Microsoft Office Specialist</div></div></div>
       </div></div>
 
       <!-- 대외활동 — 최신순 (월 기준) -->
@@ -1023,7 +1079,15 @@ var curId='';
 function openModal(title,role,type,id){
   var data=loadData()[id]||{};
   var has=data.genre||data.logoline||data.img||data.ytUrl;
-  if(!editMode&&!has)return;
+  // data-has 속성으로도 체크 (Firebase 로드 전에도 작동)
+  var row=document.querySelector('.film-row[data-id="'+id+'"]');
+  var rowHas=row&&row.getAttribute('data-has')==='1';
+  if(!editMode&&!has&&!rowHas)return;
+  if(!has&&rowHas){
+    // Firebase에서 다시 시도
+    var fresh=loadData()[id]||{};
+    data=fresh; has=fresh.genre||fresh.logoline||fresh.img||fresh.ytUrl;
+  }
   curId=id;
   document.getElementById('mTitle').textContent=title;
   document.getElementById('mRole').textContent=role.toUpperCase();
@@ -1066,8 +1130,7 @@ function updateFilmDots(){
     var has = d && (d.genre||d.logoline||d.img||d.ytUrl);
     if(has){ row.setAttribute('data-has','1'); }
     else { row.removeAttribute('data-has'); }
-    var badge = row.querySelector('.film-detail');
-    if(badge) badge.textContent = has ? '상세보기' : '';
+    // ::after CSS로 처리
   });
 }
 setTimeout(function(){updateFilmDots();},300);
@@ -1097,6 +1160,127 @@ function openActModal(){
   document.getElementById('actModalBg').classList.add('open');
 }
 function closeActModal(){document.getElementById('actModalBg').classList.remove('open');}
+
+// ── 필름 추가 기능 ──
+var FILM_ADD_KEY = 'portfolio_film_add';
+var _filmAddCache = [];
+
+function loadFilmAdd(){
+  if(_filmAddCache.length > 0) return _filmAddCache;
+  try{ return JSON.parse(localStorage.getItem(FILM_ADD_KEY)||'[]'); }catch(e){ return []; }
+}
+function saveFilmAdd_data(arr){
+  _filmAddCache = arr;
+  try{ localStorage.setItem(FILM_ADD_KEY, JSON.stringify(arr)); }catch(e){}
+  if(window._fbDB && window._fbRef && window._fbSet){
+    window._fbSet(window._fbRef(window._fbDB, 'portfolio_film_adds'), arr)
+      .catch(function(e){ console.warn('Firebase 필름추가 저장 실패:', e); });
+  }
+}
+
+function openFilmAddModal(){
+  document.getElementById('fYear').value = '';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fRole').value = '';
+  document.getElementById('filmAddModalBg').classList.add('open');
+}
+function closeFilmAddModal(){
+  document.getElementById('filmAddModalBg').classList.remove('open');
+}
+
+function saveFilmAdd(){
+  var yr = document.getElementById('fYear').value.trim();
+  var title = document.getElementById('fTitle').value.trim();
+  var role = document.getElementById('fRole').value.trim();
+  var type = document.getElementById('fType').value;
+  if(!yr || !title){ alert('연도와 제목은 필수입니다.'); return; }
+  var arr = loadFilmAdd();
+  var id = 'custom_' + Date.now();
+  arr.push({id:id, yr:yr, title:title, role:role||type, type:type, added:true});
+  saveFilmAdd_data(arr);
+  renderFilmAdds();
+  updateFilmYearRange();
+  var msg = document.getElementById('filmAddSaved');
+  msg.style.opacity = '1';
+  setTimeout(function(){ msg.style.opacity = '0'; }, 2000);
+  closeFilmAddModal();
+}
+
+function renderFilmAdds(){
+  // 기존 추가 행 제거
+  document.querySelectorAll('.film-row.user-added').forEach(function(el){ el.remove(); });
+  var arr = loadFilmAdd();
+  if(!arr.length) return;
+  arr.sort(function(a,b){ return (parseInt(b.yr)||0) - (parseInt(a.yr)||0); });
+  var roleCls = {director:'r-dir', pd:'r-pd', crew:'r-crew', ad:'r-ad'};
+  var container = document.querySelector('#pg-film .gc.fi');
+  if(!container) return;
+  arr.forEach(function(item){
+    var row = document.createElement('div');
+    row.className = 'film-row user-added';
+    row.dataset.id = item.id;
+    row.dataset.t = item.type;
+    row.setAttribute('onclick', "openModal('"+item.title+"','"+item.role+"','"+item.type+"','"+item.id+"')");
+
+    var fy = document.createElement('div');
+    fy.className = 'fy'; fy.textContent = item.yr;
+    row.appendChild(fy);
+
+    var info = document.createElement('div');
+    var ft = document.createElement('div');
+    ft.className = 'ft'; ft.textContent = item.title;
+    var fn = document.createElement('div');
+    fn.className = 'fn'; fn.textContent = item.role;
+    info.appendChild(ft); info.appendChild(fn);
+    row.appendChild(info);
+
+    var rtag = document.createElement('div');
+    rtag.className = 'r-tag ' + (roleCls[item.type]||'r-crew');
+    rtag.textContent = item.role;
+    row.appendChild(rtag);
+
+    // 삭제 버튼 (편집 모드만)
+    if(editMode){
+      var del = document.createElement('button');
+      del.className = 'act-del';
+      del.textContent = '삭제';
+      del.dataset.id = item.id;
+      del.onclick = function(){ deleteFilmAdd(this.dataset.id); };
+      row.appendChild(del);
+    }
+
+    // 연도 기준 위치에 삽입
+    var rows = container.querySelectorAll('.film-row:not(.user-added)');
+    var inserted = false;
+    for(var i=0; i<rows.length; i++){
+      var ry = parseInt(rows[i].querySelector('.fy').textContent)||0;
+      if((parseInt(item.yr)||0) > ry){ container.insertBefore(row, rows[i]); inserted=true; break; }
+    }
+    if(!inserted) container.appendChild(row);
+  });
+}
+
+function deleteFilmAdd(id){
+  var arr = loadFilmAdd().filter(function(a){ return a.id !== id; });
+  saveFilmAdd_data(arr);
+  renderFilmAdds();
+  updateFilmYearRange();
+}
+
+function updateFilmYearRange(){
+  var el = document.getElementById('filmYearRange');
+  if(!el) return;
+  var years = [];
+  document.querySelectorAll('#pg-film .fy').forEach(function(e){
+    var y = parseInt(e.textContent);
+    if(y > 2000) years.push(y);
+  });
+  if(!years.length) return;
+  el.textContent = Math.min.apply(null,years) + '–' + Math.max.apply(null,years);
+}
+
+setTimeout(function(){ renderFilmAdds(); updateFilmYearRange(); }, 600);
+
 function saveActItem(){
   var yr=document.getElementById('aYear').value.trim();
   var nm=document.getElementById('aName').value.trim();
@@ -1290,6 +1474,7 @@ document.querySelectorAll('.fi').forEach(function(el){obs.observe(el)});
         _filmCache = data;
         try { localStorage.setItem('portfolio_film_data', JSON.stringify(data)); } catch(e) {}
         if (typeof updateFilmDots === 'function') setTimeout(function(){ updateFilmDots(); }, 100);
+        if (typeof renderFilmAdds === 'function') setTimeout(function(){ renderFilmAdds(); updateFilmYearRange(); }, 200);
       }
     });
 
